@@ -76,6 +76,14 @@ import java_cup.runtime.Symbol;
                                      here, after the last %% separator */
                                   return new Symbol(TokenConstants.DARROW); }
 
+
+<YYINITIAL>"class"      { return new Symbol(TokenConstants.CLASS ); }
+
+
+<YYINITIAL>[a-zA-Z0-9_]      { return new Symbol(AbstractSymbol); }
+
+
+<YYINITIAL>[ \t\f\r\n]      { }
 .                               { /* This rule should be the very last
                                      in your lexical specification and
                                      will match match everything not
