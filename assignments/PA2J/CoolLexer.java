@@ -229,18 +229,29 @@ class CoolLexer implements java_cup.runtime.Scanner {
 		/* 8 */ YY_NO_ANCHOR,
 		/* 9 */ YY_NO_ANCHOR,
 		/* 10 */ YY_NO_ANCHOR,
-		/* 11 */ YY_NO_ANCHOR
+		/* 11 */ YY_NO_ANCHOR,
+		/* 12 */ YY_NO_ANCHOR,
+		/* 13 */ YY_NO_ANCHOR,
+		/* 14 */ YY_NO_ANCHOR,
+		/* 15 */ YY_NO_ANCHOR,
+		/* 16 */ YY_NO_ANCHOR,
+		/* 17 */ YY_NO_ANCHOR,
+		/* 18 */ YY_NO_ANCHOR,
+		/* 19 */ YY_NO_ANCHOR,
+		/* 20 */ YY_NO_ANCHOR
 	};
 	private int yy_cmap[] = unpackFromString(1,130,
-"9:9,8:2,9,8:2,9:18,8,9:15,7:10,9:3,1,2,9:2,7:26,9:4,7,9,5,7,3,7:8,4,7:6,6,7" +
-":7,9:5,0:2")[0];
+"16:9,15:2,16,15:2,16:18,15,16:15,14:10,16:3,1,2,16:2,14:26,16:4,14,16,6,14," +
+"4,14,11,14:2,10,8,14:2,5,14,9,14:3,12,7,13,14:6,3,16:4,0:2")[0];
 
-	private int yy_rmap[] = unpackFromString(1,12,
-"0,1,2,3,1:2,4,1,5,6,7,4")[0];
+	private int yy_rmap[] = unpackFromString(1,21,
+"0,1,2,1,3,1:2,4:2,1,5,6,7,8,9,10,11,12,13,4,14")[0];
 
-	private int yy_nxt[][] = unpackFromString(8,10,
-"1,2,7,3,11:4,4,7,-1:12,5,-1:10,11,10,11:3,-1:5,11:5,-1:5,11:3,6,11,-1:5,11:" +
-"3,8,11,-1:5,11:2,9,11:2,-1:2");
+	private int yy_nxt[][] = unpackFromString(15,17,
+"1,2,9,3,4,19:3,20,19:6,5,9,-1:19,6,-1:18,19,14,19:9,-1:6,19:11,-1:6,19:3,7," +
+"19:7,-1:6,19:3,8,19:7,-1:6,19:3,10,19:7,-1:6,19:9,11,19,-1:6,19:2,12,19:8,-" +
+"1:6,19:6,16,19:4,-1:6,19:7,17,19:3,-1:6,19:8,18,19:2,-1:6,19:4,13,19:6,-1:6" +
+",19:5,15,19:5,-1:2");
 
 	public java_cup.runtime.Symbol next_token ()
 		throws java.io.IOException {
@@ -316,38 +327,38 @@ class CoolLexer implements java_cup.runtime.Scanner {
 					case -3:
 						break;
 					case 3:
-						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+						{ return new Symbol(TokenConstants.LBRACE); }
 					case -4:
 						break;
 					case 4:
-						{ }
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
 					case -5:
 						break;
 					case 5:
+						{ }
+					case -6:
+						break;
+					case 6:
 						{ /* Sample lexical rule for "=>" arrow.
                                      Further lexical rules should be defined
                                      here, after the last %% separator */
                                   return new Symbol(TokenConstants.DARROW); }
-					case -6:
-						break;
-					case 6:
-						{ return new Symbol(TokenConstants.CLASS ); }
 					case -7:
 						break;
 					case 7:
+						{ return new Symbol(TokenConstants.CLASS ); }
+					case -8:
+						break;
+					case 8:
+						{ return new Symbol(TokenConstants.INHERITS ); }
+					case -9:
+						break;
+					case 9:
 						{ /* This rule should be the very last
                                      in your lexical specification and
                                      will match match everything not
                                      matched by other lexical rules. */
                                   System.err.println("LEXER BUG - UNMATCHED: " + yytext()); }
-					case -8:
-						break;
-					case 8:
-						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
-					case -9:
-						break;
-					case 9:
-						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
 					case -10:
 						break;
 					case 10:
@@ -357,6 +368,42 @@ class CoolLexer implements java_cup.runtime.Scanner {
 					case 11:
 						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
 					case -12:
+						break;
+					case 12:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -13:
+						break;
+					case 13:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -14:
+						break;
+					case 14:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -15:
+						break;
+					case 15:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -16:
+						break;
+					case 16:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -17:
+						break;
+					case 17:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -18:
+						break;
+					case 18:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -19:
+						break;
+					case 19:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -20:
+						break;
+					case 20:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -21:
 						break;
 					default:
 						yy_error(YY_E_INTERNAL,false);

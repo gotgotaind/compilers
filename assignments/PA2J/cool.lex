@@ -79,12 +79,12 @@ import java_cup.runtime.Symbol;
 <YYINITIAL>"{"			{ return new Symbol(TokenConstants.LBRACE); }
 
 <YYINITIAL>"class"      { return new Symbol(TokenConstants.CLASS ); }
-
+<YYINITIAL>"inherits"      { return new Symbol(TokenConstants.INHERITS ); }
 
 <YYINITIAL>[a-zA-Z0-9_]+      { return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
 
 
-<YYINITIAL>[ \t\f\r\n]      { }
+<YYINITIAL>[ \t\v\f\r\n]      { }
 .                               { /* This rule should be the very last
                                      in your lexical specification and
                                      will match match everything not
