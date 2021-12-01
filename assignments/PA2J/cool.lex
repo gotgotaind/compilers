@@ -76,11 +76,12 @@ import java_cup.runtime.Symbol;
                                      here, after the last %% separator */
                                   return new Symbol(TokenConstants.DARROW); }
 
+<YYINITIAL>"{"			{ return new Symbol(TokenConstants.LBRACE); }
 
 <YYINITIAL>"class"      { return new Symbol(TokenConstants.CLASS ); }
 
 
-<YYINITIAL>[a-zA-Z0-9_]      { return new Symbol(AbstractSymbol); }
+<YYINITIAL>[a-zA-Z0-9_]+      { return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
 
 
 <YYINITIAL>[ \t\f\r\n]      { }

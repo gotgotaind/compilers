@@ -222,16 +222,25 @@ class CoolLexer implements java_cup.runtime.Scanner {
 		/* 1 */ YY_NO_ANCHOR,
 		/* 2 */ YY_NO_ANCHOR,
 		/* 3 */ YY_NO_ANCHOR,
-		/* 4 */ YY_NO_ANCHOR
+		/* 4 */ YY_NO_ANCHOR,
+		/* 5 */ YY_NO_ANCHOR,
+		/* 6 */ YY_NO_ANCHOR,
+		/* 7 */ YY_NO_ANCHOR,
+		/* 8 */ YY_NO_ANCHOR,
+		/* 9 */ YY_NO_ANCHOR,
+		/* 10 */ YY_NO_ANCHOR,
+		/* 11 */ YY_NO_ANCHOR
 	};
 	private int yy_cmap[] = unpackFromString(1,130,
-"3:10,0,3:2,0,3:47,1,2,3:65,4:2")[0];
+"9:9,8:2,9,8:2,9:18,8,9:15,7:10,9:3,1,2,9:2,7:26,9:4,7,9,5,7,3,7:8,4,7:6,6,7" +
+":7,9:5,0:2")[0];
 
-	private int yy_rmap[] = unpackFromString(1,5,
-"0,1,2:3")[0];
+	private int yy_rmap[] = unpackFromString(1,12,
+"0,1,2,3,1:2,4,1,5,6,7,4")[0];
 
-	private int yy_nxt[][] = unpackFromString(3,5,
-"-1,1,4:2,2,-1:2,3,-1:7");
+	private int yy_nxt[][] = unpackFromString(8,10,
+"1,2,7,3,11:4,4,7,-1:12,5,-1:10,11,10,11:3,-1:5,11:5,-1:5,11:3,6,11,-1:5,11:" +
+"3,8,11,-1:5,11:2,9,11:2,-1:2");
 
 	public java_cup.runtime.Symbol next_token ()
 		throws java.io.IOException {
@@ -295,31 +304,59 @@ class CoolLexer implements java_cup.runtime.Scanner {
 					yy_to_mark();
 					switch (yy_last_accept_state) {
 					case 1:
+						
+					case -2:
+						break;
+					case 2:
 						{ /* This rule should be the very last
                                      in your lexical specification and
                                      will match match everything not
                                      matched by other lexical rules. */
                                   System.err.println("LEXER BUG - UNMATCHED: " + yytext()); }
-					case -2:
-						break;
-					case 2:
-						
 					case -3:
 						break;
 					case 3:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -4:
+						break;
+					case 4:
+						{ }
+					case -5:
+						break;
+					case 5:
 						{ /* Sample lexical rule for "=>" arrow.
                                      Further lexical rules should be defined
                                      here, after the last %% separator */
                                   return new Symbol(TokenConstants.DARROW); }
-					case -4:
+					case -6:
 						break;
-					case 4:
+					case 6:
+						{ return new Symbol(TokenConstants.CLASS ); }
+					case -7:
+						break;
+					case 7:
 						{ /* This rule should be the very last
                                      in your lexical specification and
                                      will match match everything not
                                      matched by other lexical rules. */
                                   System.err.println("LEXER BUG - UNMATCHED: " + yytext()); }
-					case -5:
+					case -8:
+						break;
+					case 8:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -9:
+						break;
+					case 9:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -10:
+						break;
+					case 10:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -11:
+						break;
+					case 11:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -12:
 						break;
 					default:
 						yy_error(YY_E_INTERNAL,false);
