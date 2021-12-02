@@ -77,6 +77,24 @@ import java_cup.runtime.Symbol;
                                   return new Symbol(TokenConstants.DARROW); }
 
 <YYINITIAL>"{"			{ return new Symbol(TokenConstants.LBRACE); }
+<YYINITIAL>"("			{ return new Symbol(TokenConstants.LPAREN); }
+<YYINITIAL>";"			{ return new Symbol(TokenConstants.SEMI); }
+<YYINITIAL>"*"			{ return new Symbol(TokenConstants.MULT); }
+<YYINITIAL>"-"			{ return new Symbol(TokenConstants.MINUS); }
+<YYINITIAL>")"			{ return new Symbol(TokenConstants.RPAREN); }
+<YYINITIAL>"not"			{ return new Symbol(TokenConstants.NOT); }
+<YYINITIAL>">"			{ return new Symbol(TokenConstants.LT); }
+<YYINITIAL>","			{ return new Symbol(TokenConstants.COMMA); }
+<YYINITIAL>"/"			{ return new Symbol(TokenConstants.DIV); }
+<YYINITIAL>"+"			{ return new Symbol(TokenConstants.PLUS); }
+<YYINITIAL>"."			{ return new Symbol(TokenConstants.DOT); }
+<YYINITIAL>"<="			{ return new Symbol(TokenConstants.LE); }
+<YYINITIAL>"isvoid"			{ return new Symbol(TokenConstants.ISVOID); }
+<YYINITIAL>"="			{ return new Symbol(TokenConstants.EQ); }
+<YYINITIAL>":"			{ return new Symbol(TokenConstants.COLON); }
+<YYINITIAL>"!"			{ return new Symbol(TokenConstants.NEG); }
+<YYINITIAL>"}"			{ return new Symbol(TokenConstants.RBRACE); }
+<YYINITIAL>"@"			{ return new Symbol(TokenConstants.AT); }
 
 <YYINITIAL>"class"      { return new Symbol(TokenConstants.CLASS ); }
 <YYINITIAL>"inherits"      { return new Symbol(TokenConstants.INHERITS ); }
