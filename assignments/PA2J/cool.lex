@@ -82,22 +82,37 @@ import java_cup.runtime.Symbol;
 <YYINITIAL>"*"			{ return new Symbol(TokenConstants.MULT); }
 <YYINITIAL>"-"			{ return new Symbol(TokenConstants.MINUS); }
 <YYINITIAL>")"			{ return new Symbol(TokenConstants.RPAREN); }
-<YYINITIAL>"not"			{ return new Symbol(TokenConstants.NOT); }
 <YYINITIAL>">"			{ return new Symbol(TokenConstants.LT); }
 <YYINITIAL>","			{ return new Symbol(TokenConstants.COMMA); }
 <YYINITIAL>"/"			{ return new Symbol(TokenConstants.DIV); }
 <YYINITIAL>"+"			{ return new Symbol(TokenConstants.PLUS); }
 <YYINITIAL>"."			{ return new Symbol(TokenConstants.DOT); }
 <YYINITIAL>"<="			{ return new Symbol(TokenConstants.LE); }
-<YYINITIAL>"isvoid"			{ return new Symbol(TokenConstants.ISVOID); }
 <YYINITIAL>"="			{ return new Symbol(TokenConstants.EQ); }
 <YYINITIAL>":"			{ return new Symbol(TokenConstants.COLON); }
 <YYINITIAL>"!"			{ return new Symbol(TokenConstants.NEG); }
 <YYINITIAL>"}"			{ return new Symbol(TokenConstants.RBRACE); }
 <YYINITIAL>"@"			{ return new Symbol(TokenConstants.AT); }
 
-<YYINITIAL>"class"      { return new Symbol(TokenConstants.CLASS ); }
+<YYINITIAL>class     { return new Symbol(TokenConstants.CLASS ); }
 <YYINITIAL>"inherits"      { return new Symbol(TokenConstants.INHERITS ); }
+<YYINITIAL>"else"      { return new Symbol(TokenConstants.ELSE ); }
+<YYINITIAL>"fi"      { return new Symbol(TokenConstants.FI ); }
+<YYINITIAL>"if"      { return new Symbol(TokenConstants.IF ); }
+<YYINITIAL>"in"      { return new Symbol(TokenConstants.IN ); }
+<YYINITIAL>"isvoid"			{ return new Symbol(TokenConstants.ISVOID); }
+<YYINITIAL>"let"      { return new Symbol(TokenConstants.LET ); }
+<YYINITIAL>"loop"      { return new Symbol(TokenConstants.LOOP ); }
+<YYINITIAL>"pool"      { return new Symbol(TokenConstants.POOL ); }
+<YYINITIAL>"then"      { return new Symbol(TokenConstants.THEN ); }
+<YYINITIAL>"while"      { return new Symbol(TokenConstants.WHILE ); }
+<YYINITIAL>"case"      { return new Symbol(TokenConstants.CASE ); }
+<YYINITIAL>"esac"      { return new Symbol(TokenConstants.ESAC ); }
+<YYINITIAL>"new"      { return new Symbol(TokenConstants.NEW ); }
+<YYINITIAL>"not"			{ return new Symbol(TokenConstants.NOT); }
+<YYINITIAL>"of"			{ return new Symbol(TokenConstants.OF); }
+<YYINITIAL>"true"			{ return new Symbol(TokenConstants.BOOL_CONST,true); }
+<YYINITIAL>"false"			{ return new Symbol(TokenConstants.BOOL_CONST,false); }
 
 <YYINITIAL>[a-zA-Z0-9_]+      { return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
 
