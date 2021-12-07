@@ -42,6 +42,7 @@ import java_cup.runtime.Symbol;
  *  go here.  Don't remove or modify anything that was there initially. */
 
     // empty for now
+
 %init}
 
 %eofval{
@@ -68,8 +69,25 @@ import java_cup.runtime.Symbol;
 
 %class CoolLexer
 %cup
+%state STRING
 
 %%
+
+<YYINITIAL>\"           {
+                            yybegin(STRING);
+                            string_buf=new StringBuffer();
+                        }
+
+<STRING>\\b              {string_buf.append("\b");}
+<STRING>\\t              {string_buf.append("\t");}
+<STRING>\\n              {string_buf.append("\n");}
+<STRING>\\f              {string_buf.append("\f");}
+<STRING>\\.              {string_buf.append(yytext().substring(1,1));}
+<STRING>[^\"|\\]*        {string_buf.append(yytext());}
+<STRING>\"              {
+                            yybegin(YYINITIAL);
+                            return new Symbol(TokenConstants.STR_CONST,AbstractTable.stringtable.addString(string_buf.toString()));
+                        }
 
 <YYINITIAL>"=>"			{ /* Sample lexical rule for "=>" arrow.
                                      Further lexical rules should be defined

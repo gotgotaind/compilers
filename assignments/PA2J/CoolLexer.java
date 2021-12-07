@@ -75,9 +75,11 @@ class CoolLexer implements java_cup.runtime.Scanner {
 	}
 
 	private boolean yy_eof_done = false;
+	private final int STRING = 1;
 	private final int YYINITIAL = 0;
 	private final int yy_state_dtrans[] = {
-		0
+		0,
+		43
 	};
 	private void yybegin (int state) {
 		yy_lexical_state = state;
@@ -305,34 +307,49 @@ class CoolLexer implements java_cup.runtime.Scanner {
 		/* 84 */ YY_NO_ANCHOR,
 		/* 85 */ YY_NO_ANCHOR,
 		/* 86 */ YY_NO_ANCHOR,
-		/* 87 */ YY_NO_ANCHOR
+		/* 87 */ YY_NO_ANCHOR,
+		/* 88 */ YY_NO_ANCHOR,
+		/* 89 */ YY_NO_ANCHOR,
+		/* 90 */ YY_NO_ANCHOR,
+		/* 91 */ YY_NO_ANCHOR,
+		/* 92 */ YY_NO_ANCHOR,
+		/* 93 */ YY_NO_ANCHOR,
+		/* 94 */ YY_NO_ANCHOR,
+		/* 95 */ YY_NO_ANCHOR,
+		/* 96 */ YY_NO_ANCHOR,
+		/* 97 */ YY_NO_ANCHOR
 	};
 	private int yy_cmap[] = unpackFromString(1,130,
-"37:9,36:2,37,36:2,37:18,36,15,37:6,4,8,6,11,9,7,12,10,35:10,14,5,13,1,2,37," +
-"17,35:26,37:4,35,37,20,35,18,31,25,28,35,24,22,35:2,19,35,23,30,32,35,26,21" +
-",27,34,29,33,35:3,3,37,16,37:2,0:2")[0];
+"8:9,42,9,8,42,9,8:18,42,24,1,8:5,13,17,15,20,18,16,21,19,41:10,23,14,22,10," +
+"11,8,26,41:26,8,2,8:2,41,8,29,3,27,37,33,6,41,32,31,41:2,28,41,5,36,38,41,3" +
+"4,30,4,40,35,39,41:3,12,7,25,8:2,0:2")[0];
 
-	private int yy_rmap[] = unpackFromString(1,88,
-"0,1,2,1:11,3,1:4,4,1:3,5,6:18,1,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,2" +
-"2,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,6,46" +
-",47,48,49,50")[0];
+	private int yy_rmap[] = unpackFromString(1,98,
+"0,1:3,2,1,3,1:15,2,1:2,4,2:17,5,1:6,6,7,8,9,10,11,12,13,14,15,16,17,18,19,2" +
+"0,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,4" +
+"5,46,47,48,49,50,51,52,53")[0];
 
-	private int yy_nxt[][] = unpackFromString(51,38,
-"1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,61,82:2,43,62,82,83,82,84,4" +
-"4,82,45,82,85,86,82:2,20,42,-1:40,21,-1:36,22,-1:54,82,87,63,82:15,-1:20,82" +
-":6,75,82:11,-1:20,82:18,-1:20,82:3,65,82,23,82:4,24,82:7,-1:20,82:2,70,82,2" +
-"5,82:13,-1:20,82:10,26,82:7,-1:20,82:9,27,82:8,-1:20,82:15,28,82:2,-1:20,82" +
-":9,29,82:8,-1:20,82:7,30,82:10,-1:20,82:14,31,82:3,-1:20,82:7,32,82:10,-1:2" +
-"0,33,82:17,-1:20,82:5,34,82:12,-1:20,82:7,35,82:10,-1:20,82,36,82:16,-1:20," +
-"82:3,37,82:14,-1:20,82:7,38,82:10,-1:20,82:7,39,82:10,-1:20,82:13,40,82:4,-" +
-"1:20,82:3,41,82:14,-1:20,82:7,46,82:4,64,82:5,-1:20,82:7,47,82:4,48,82:5,-1" +
-":20,82:3,49,82:14,-1:20,82:12,50,82:5,-1:20,82:11,74,82:6,-1:20,82:3,51,82:" +
-"14,-1:20,82:2,52,82:15,-1:20,82:7,53,82:10,-1:20,82:16,54,82,-1:20,82,76,82" +
-":16,-1:20,82:12,55,82:5,-1:20,82:4,77,82:13,-1:20,82:3,56,82:14,-1:20,82:12" +
-",78,82:5,-1:20,82:7,79,82:10,-1:20,82:3,57,82:14,-1:20,82,58,82:16,-1:20,82" +
-":4,59,82:13,-1:20,82:8,80,82:9,-1:20,82:4,81,82:13,-1:20,82:9,60,82:8,-1:20" +
-",82,66,82,67,82:14,-1:20,82:6,68,82,69,82:9,-1:20,82:12,71,82:5,-1:20,82:6," +
-"72,82:11,-1:20,82:2,73,82:15,-1:2");
+	private int yy_nxt[][] = unpackFromString(54,43,
+"1,2,3,4,85,71,51,3:2,5,6,7,8,9,10,11,12,13,14,15,16,17,50,18,19,20,21,86,72" +
+",4:2,54,4,87,4:2,55,4,88,94,4:2,5,-1:46,4:4,-1:20,4:15,-1:12,23,-1:34,4:4,-" +
+"1:20,4:5,97,4:9,-1,1,44,53,52:4,3,52:35,-1:10,24,-1:35,4:4,-1:20,4:2,89,4,2" +
+"2,4:10,-1:4,52:4,-1,52:35,-1,45:2,46,47,48,49,45:2,-1,45:33,-1:3,4:2,25,26," +
+"-1:20,4:3,95,4:11,-1:4,4:3,27,-1:20,4:15,-1:4,4:4,-1:20,4:12,28,4:2,-1:4,4," +
+"29,4:2,-1:20,4:15,-1:4,4,30,4:2,-1:20,4:15,-1:4,4:2,31,4,-1:20,4:15,-1:4,4:" +
+"4,-1:20,4:6,32,4:8,-1:4,4:4,-1:20,4:6,33,4:8,-1:4,4:4,-1:20,4:11,34,4:3,-1:" +
+"4,4:4,-1:20,4:6,35,4:8,-1:4,4:4,-1:20,36,4:14,-1:4,4:4,-1:20,4,37,4:13,-1:4" +
+",4:4,-1:20,4:6,38,4:8,-1:4,4:4,-1:20,4:3,39,4:11,-1:4,4:4,-1:20,4:6,40,4:8," +
+"-1:4,4:4,-1:20,4:10,41,4:4,-1:4,4:4,-1:20,4:3,42,4:11,-1:4,4:4,-1:20,4:6,56" +
+",4:2,57,4:5,-1:4,4:4,-1:20,4:6,58,4:2,76,4:5,-1:4,4:4,-1:20,4:6,59,4:8,-1:4" +
+",4:4,-1:20,4:13,60,4,-1:4,4:4,-1:20,4:3,61,4:11,-1:4,4:4,-1:20,4:9,62,4:5,-" +
+"1:4,4:4,-1:20,4:3,63,4:11,-1:4,4:4,-1:20,4:2,64,4:12,-1:4,4:4,-1:20,4:9,65," +
+"4:5,-1:4,4:4,-1:20,4:3,66,4:11,-1:4,4:4,-1:20,4:3,67,4:11,-1:4,4:4,-1:20,4," +
+"68,4:13,-1:4,4:4,-1:20,4:4,69,4:10,-1:4,4,70,4:2,-1:20,4:15,-1:4,4:4,-1:20," +
+"4:5,73,4,74,4:7,-1:4,4:4,-1:20,4,90,75,4:12,-1:4,4:4,-1:20,4,77,4,78,4:11,-" +
+"1:4,4:4,-1:20,4:9,79,4:5,-1:4,4:4,-1:20,4,80,4:13,-1:4,4:4,-1:20,4:2,81,4:1" +
+"2,-1:4,4:4,-1:20,4:4,82,4:10,-1:4,4:4,-1:20,4:9,83,4:5,-1:4,4:4,-1:20,4:4,8" +
+"4,4:10,-1:4,4:4,-1:20,4:5,91,4:9,-1:4,4:4,-1:20,4:8,92,4:6,-1:4,4:4,-1:20,4" +
+":7,93,4:7,-1:4,4:4,-1:20,4:6,96,4:8,-1");
 
 	public java_cup.runtime.Symbol next_token ()
 		throws java.io.IOException {
@@ -400,114 +417,117 @@ class CoolLexer implements java_cup.runtime.Scanner {
 					case -2:
 						break;
 					case 2:
-						{ return new Symbol(TokenConstants.EQ); }
+						{
+                            yybegin(STRING);
+                            string_buf=new StringBuffer();
+                        }
 					case -3:
 						break;
 					case 3:
-						{ return new Symbol(TokenConstants.LT); }
-					case -4:
-						break;
-					case 4:
-						{ return new Symbol(TokenConstants.LBRACE); }
-					case -5:
-						break;
-					case 5:
-						{ return new Symbol(TokenConstants.LPAREN); }
-					case -6:
-						break;
-					case 6:
-						{ return new Symbol(TokenConstants.SEMI); }
-					case -7:
-						break;
-					case 7:
-						{ return new Symbol(TokenConstants.MULT); }
-					case -8:
-						break;
-					case 8:
-						{ return new Symbol(TokenConstants.MINUS); }
-					case -9:
-						break;
-					case 9:
-						{ return new Symbol(TokenConstants.RPAREN); }
-					case -10:
-						break;
-					case 10:
-						{ return new Symbol(TokenConstants.COMMA); }
-					case -11:
-						break;
-					case 11:
-						{ return new Symbol(TokenConstants.DIV); }
-					case -12:
-						break;
-					case 12:
-						{ return new Symbol(TokenConstants.PLUS); }
-					case -13:
-						break;
-					case 13:
-						{ return new Symbol(TokenConstants.DOT); }
-					case -14:
-						break;
-					case 14:
 						{ /* This rule should be the very last
                                      in your lexical specification and
                                      will match match everything not
                                      matched by other lexical rules. */
                                   System.err.println("LEXER BUG - UNMATCHED: " + yytext()); }
+					case -4:
+						break;
+					case 4:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -5:
+						break;
+					case 5:
+						{ }
+					case -6:
+						break;
+					case 6:
+						{ return new Symbol(TokenConstants.EQ); }
+					case -7:
+						break;
+					case 7:
+						{ return new Symbol(TokenConstants.LT); }
+					case -8:
+						break;
+					case 8:
+						{ return new Symbol(TokenConstants.LBRACE); }
+					case -9:
+						break;
+					case 9:
+						{ return new Symbol(TokenConstants.LPAREN); }
+					case -10:
+						break;
+					case 10:
+						{ return new Symbol(TokenConstants.SEMI); }
+					case -11:
+						break;
+					case 11:
+						{ return new Symbol(TokenConstants.MULT); }
+					case -12:
+						break;
+					case 12:
+						{ return new Symbol(TokenConstants.MINUS); }
+					case -13:
+						break;
+					case 13:
+						{ return new Symbol(TokenConstants.RPAREN); }
+					case -14:
+						break;
+					case 14:
+						{ return new Symbol(TokenConstants.COMMA); }
 					case -15:
 						break;
 					case 15:
-						{ return new Symbol(TokenConstants.COLON); }
+						{ return new Symbol(TokenConstants.DIV); }
 					case -16:
 						break;
 					case 16:
-						{ return new Symbol(TokenConstants.NEG); }
+						{ return new Symbol(TokenConstants.PLUS); }
 					case -17:
 						break;
 					case 17:
-						{ return new Symbol(TokenConstants.RBRACE); }
+						{ return new Symbol(TokenConstants.DOT); }
 					case -18:
 						break;
 					case 18:
-						{ return new Symbol(TokenConstants.AT); }
+						{ return new Symbol(TokenConstants.COLON); }
 					case -19:
 						break;
 					case 19:
-						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+						{ return new Symbol(TokenConstants.NEG); }
 					case -20:
 						break;
 					case 20:
-						{ }
+						{ return new Symbol(TokenConstants.RBRACE); }
 					case -21:
 						break;
 					case 21:
+						{ return new Symbol(TokenConstants.AT); }
+					case -22:
+						break;
+					case 22:
+						{ return new Symbol(TokenConstants.FI ); }
+					case -23:
+						break;
+					case 23:
 						{ /* Sample lexical rule for "=>" arrow.
                                      Further lexical rules should be defined
                                      here, after the last %% separator */
                                   return new Symbol(TokenConstants.DARROW); }
-					case -22:
-						break;
-					case 22:
-						{ return new Symbol(TokenConstants.LE); }
-					case -23:
-						break;
-					case 23:
-						{ return new Symbol(TokenConstants.IN ); }
 					case -24:
 						break;
 					case 24:
-						{ return new Symbol(TokenConstants.IF ); }
+						{ return new Symbol(TokenConstants.LE); }
 					case -25:
 						break;
 					case 25:
-						{ return new Symbol(TokenConstants.FI ); }
+						{ return new Symbol(TokenConstants.IN ); }
 					case -26:
 						break;
 					case 26:
-						{ return new Symbol(TokenConstants.OF); }
+						{ return new Symbol(TokenConstants.IF ); }
 					case -27:
 						break;
 					case 27:
-						{ return new Symbol(TokenConstants.LET ); }
+						{ return new Symbol(TokenConstants.OF); }
 					case -28:
 						break;
 					case 28:
@@ -519,35 +539,35 @@ class CoolLexer implements java_cup.runtime.Scanner {
 					case -30:
 						break;
 					case 30:
-						{ return new Symbol(TokenConstants.CASE ); }
+						{ return new Symbol(TokenConstants.LET ); }
 					case -31:
 						break;
 					case 31:
-						{ return new Symbol(TokenConstants.LOOP ); }
+						{ return new Symbol(TokenConstants.THEN ); }
 					case -32:
 						break;
 					case 32:
-						{ return new Symbol(TokenConstants.ELSE ); }
+						{ return new Symbol(TokenConstants.BOOL_CONST,true); }
 					case -33:
 						break;
 					case 33:
-						{ return new Symbol(TokenConstants.ESAC ); }
+						{ return new Symbol(TokenConstants.CASE ); }
 					case -34:
 						break;
 					case 34:
-						{ return new Symbol(TokenConstants.THEN ); }
+						{ return new Symbol(TokenConstants.LOOP ); }
 					case -35:
 						break;
 					case 35:
-						{ return new Symbol(TokenConstants.BOOL_CONST,true); }
+						{ return new Symbol(TokenConstants.ELSE ); }
 					case -36:
 						break;
 					case 36:
-						{ return new Symbol(TokenConstants.POOL ); }
+						{ return new Symbol(TokenConstants.ESAC ); }
 					case -37:
 						break;
 					case 37:
-						{ return new Symbol(TokenConstants.CLASS ); }
+						{ return new Symbol(TokenConstants.POOL ); }
 					case -38:
 						break;
 					case 38:
@@ -555,55 +575,58 @@ class CoolLexer implements java_cup.runtime.Scanner {
 					case -39:
 						break;
 					case 39:
-						{ return new Symbol(TokenConstants.WHILE ); }
+						{ return new Symbol(TokenConstants.CLASS ); }
 					case -40:
 						break;
 					case 40:
-						{ return new Symbol(TokenConstants.ISVOID); }
+						{ return new Symbol(TokenConstants.WHILE ); }
 					case -41:
 						break;
 					case 41:
-						{ return new Symbol(TokenConstants.INHERITS ); }
+						{ return new Symbol(TokenConstants.ISVOID); }
 					case -42:
 						break;
 					case 42:
+						{ return new Symbol(TokenConstants.INHERITS ); }
+					case -43:
+						break;
+					case 43:
+						{string_buf.append(yytext());}
+					case -44:
+						break;
+					case 44:
+						{
+                            yybegin(YYINITIAL);
+                            return new Symbol(TokenConstants.STR_CONST,AbstractTable.stringtable.addString(string_buf.toString()));
+                        }
+					case -45:
+						break;
+					case 45:
+						{string_buf.append(yytext().substring(1,1));}
+					case -46:
+						break;
+					case 46:
+						{string_buf.append("\b");}
+					case -47:
+						break;
+					case 47:
+						{string_buf.append("\t");}
+					case -48:
+						break;
+					case 48:
+						{string_buf.append("\n");}
+					case -49:
+						break;
+					case 49:
+						{string_buf.append("\f");}
+					case -50:
+						break;
+					case 50:
 						{ /* This rule should be the very last
                                      in your lexical specification and
                                      will match match everything not
                                      matched by other lexical rules. */
                                   System.err.println("LEXER BUG - UNMATCHED: " + yytext()); }
-					case -43:
-						break;
-					case 43:
-						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
-					case -44:
-						break;
-					case 44:
-						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
-					case -45:
-						break;
-					case 45:
-						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
-					case -46:
-						break;
-					case 46:
-						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
-					case -47:
-						break;
-					case 47:
-						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
-					case -48:
-						break;
-					case 48:
-						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
-					case -49:
-						break;
-					case 49:
-						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
-					case -50:
-						break;
-					case 50:
-						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
 					case -51:
 						break;
 					case 51:
@@ -611,11 +634,15 @@ class CoolLexer implements java_cup.runtime.Scanner {
 					case -52:
 						break;
 					case 52:
-						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+						{string_buf.append(yytext());}
 					case -53:
 						break;
 					case 53:
-						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+						{ /* This rule should be the very last
+                                     in your lexical specification and
+                                     will match match everything not
+                                     matched by other lexical rules. */
+                                  System.err.println("LEXER BUG - UNMATCHED: " + yytext()); }
 					case -54:
 						break;
 					case 54:
@@ -753,6 +780,46 @@ class CoolLexer implements java_cup.runtime.Scanner {
 					case 87:
 						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
 					case -88:
+						break;
+					case 88:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -89:
+						break;
+					case 89:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -90:
+						break;
+					case 90:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -91:
+						break;
+					case 91:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -92:
+						break;
+					case 92:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -93:
+						break;
+					case 93:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -94:
+						break;
+					case 94:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -95:
+						break;
+					case 95:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -96:
+						break;
+					case 96:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -97:
+						break;
+					case 97:
+						{ return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+					case -98:
 						break;
 					default:
 						yy_error(YY_E_INTERNAL,false);
