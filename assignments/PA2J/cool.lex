@@ -24,6 +24,8 @@ import java_cup.runtime.Symbol;
 	return curr_lineno;
     }
 
+    int block_comment_nb;
+
     private AbstractSymbol filename;
 
     void set_filename(String fname) {
@@ -69,7 +71,8 @@ import java_cup.runtime.Symbol;
 
 %class CoolLexer
 %cup
-%state STRING
+%state STRING,LINECOMMENT
+%state BLOCKCOMMENT
 
 %%
 
@@ -88,6 +91,30 @@ import java_cup.runtime.Symbol;
                             yybegin(YYINITIAL);
                             return new Symbol(TokenConstants.STR_CONST,AbstractTable.stringtable.addString(string_buf.toString()));
                         }
+
+<YYINITIAL>--           {
+                            yybegin(LINECOMMENT);
+                        }
+<LINECOMMENT>.$          {
+                            yybegin(YYINITIAL);
+                        }
+
+<YYINITIAL>\(\*         {
+                            yybegin(BLOCKCOMMENT);
+                            block_comment_nb=1;
+                        }
+<BLOCKCOMMENT>\(\*      {
+                            block_comment_nb=block_comment_nb+1;
+                        }                        
+<BLOCKCOMMENT>\*\)      {
+                            block_comment_nb=block_comment_nb-1;
+                            if( block_comment_nb==0 ) {
+                                yybegin(YYINITIAL);
+                            }
+                        }  
+<BLOCKCOMMENT>.         {
+                            
+                        } 
 
 <YYINITIAL>"=>"			{ /* Sample lexical rule for "=>" arrow.
                                      Further lexical rules should be defined
