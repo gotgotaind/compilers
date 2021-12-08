@@ -95,8 +95,10 @@ import java_cup.runtime.Symbol;
 <YYINITIAL>--           {
                             yybegin(LINECOMMENT);
                         }
-<LINECOMMENT>.$          {
+<LINECOMMENT>.          {}
+<LINECOMMENT>\n         {
                             yybegin(YYINITIAL);
+                            curr_lineno++;
                         }
 
 <YYINITIAL>\(\*         {
@@ -112,9 +114,8 @@ import java_cup.runtime.Symbol;
                                 yybegin(YYINITIAL);
                             }
                         }  
-<BLOCKCOMMENT>.         {
-                            
-                        } 
+<BLOCKCOMMENT>.|\n      {} 
+<BLOCKCOMMENT>\n        {curr_lineno++;} 
 
 <YYINITIAL>"=>"			{ /* Sample lexical rule for "=>" arrow.
                                      Further lexical rules should be defined
@@ -162,7 +163,8 @@ import java_cup.runtime.Symbol;
 <YYINITIAL>[A-Z][a-zA-Z0-9_]*      { return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
 <YYINITIAL>[a-z][a-zA-Z0-9_]*      { return new Symbol(TokenConstants.OBJECTID,AbstractTable.idtable.addString(yytext())); }
 
-<YYINITIAL>[ \t\v\f\r\n]      { }
+<YYINITIAL>[ \t\v\f\r]      { }
+<YYINITIAL>\n      { curr_lineno++; }
 .                               { /* This rule should be the very last
                                      in your lexical specification and
                                      will match match everything not
