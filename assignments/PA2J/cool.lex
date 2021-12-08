@@ -132,8 +132,8 @@ import java_cup.runtime.Symbol;
 <YYINITIAL>"true"			{ return new Symbol(TokenConstants.BOOL_CONST,true); }
 <YYINITIAL>"false"			{ return new Symbol(TokenConstants.BOOL_CONST,false); }
 
-<YYINITIAL>[a-zA-Z0-9_]+      { return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
-
+<YYINITIAL>[A-Z][a-zA-Z0-9_]*      { return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
+<YYINITIAL>[a-z][a-zA-Z0-9_]*      { return new Symbol(TokenConstants.OBJECTID,AbstractTable.idtable.addString(yytext())); }
 
 <YYINITIAL>[ \t\v\f\r\n]      { }
 .                               { /* This rule should be the very last
