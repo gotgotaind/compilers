@@ -66,8 +66,9 @@ import java_cup.runtime.Symbol;
 	   break;
 	*/
     case BLOCKCOMMENT:
+        yybegin(YYINITIAL);
         return new Symbol(TokenConstants.ERROR,"EOF in comment");
-    break;
+    
     }
     return new Symbol(TokenConstants.EOF);
 %eofval}
@@ -134,12 +135,12 @@ import java_cup.runtime.Symbol;
 <YYINITIAL>"*"			{ return new Symbol(TokenConstants.MULT); }
 <YYINITIAL>"-"			{ return new Symbol(TokenConstants.MINUS); }
 <YYINITIAL>")"			{ return new Symbol(TokenConstants.RPAREN); }
-<YYINITIAL>">"			{ return new Symbol(TokenConstants.LT); }
+<YYINITIAL>"<"			{ return new Symbol(TokenConstants.LT); }
+<YYINITIAL>"<="			{ return new Symbol(TokenConstants.LE); }
 <YYINITIAL>","			{ return new Symbol(TokenConstants.COMMA); }
 <YYINITIAL>"/"			{ return new Symbol(TokenConstants.DIV); }
 <YYINITIAL>"+"			{ return new Symbol(TokenConstants.PLUS); }
 <YYINITIAL>"."			{ return new Symbol(TokenConstants.DOT); }
-<YYINITIAL>"<="			{ return new Symbol(TokenConstants.LE); }
 <YYINITIAL>"="			{ return new Symbol(TokenConstants.EQ); }
 <YYINITIAL>":"			{ return new Symbol(TokenConstants.COLON); }
 <YYINITIAL>"!"			{ return new Symbol(TokenConstants.NEG); }
