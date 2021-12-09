@@ -65,6 +65,9 @@ import java_cup.runtime.Symbol;
 	   ...
 	   break;
 	*/
+    case BLOCKCOMMENT:
+        return new Symbol(TokenConstants.ERROR,"EOF in comment");
+    break;
     }
     return new Symbol(TokenConstants.EOF);
 %eofval}
@@ -114,8 +117,11 @@ import java_cup.runtime.Symbol;
                                 yybegin(YYINITIAL);
                             }
                         }  
-<BLOCKCOMMENT>.|\n      {} 
+
 <BLOCKCOMMENT>\n        {curr_lineno++;} 
+<BLOCKCOMMENT>.         {} 
+<BLOCKCOMMENT>.         {} 
+
 
 <YYINITIAL>"=>"			{ /* Sample lexical rule for "=>" arrow.
                                      Further lexical rules should be defined
@@ -139,6 +145,7 @@ import java_cup.runtime.Symbol;
 <YYINITIAL>"!"			{ return new Symbol(TokenConstants.NEG); }
 <YYINITIAL>"}"			{ return new Symbol(TokenConstants.RBRACE); }
 <YYINITIAL>"@"			{ return new Symbol(TokenConstants.AT); }
+<YYINITIAL>"<-"			{ return new Symbol(TokenConstants.ASSIGN); }
 
 <YYINITIAL>class     { return new Symbol(TokenConstants.CLASS ); }
 <YYINITIAL>"inherits"      { return new Symbol(TokenConstants.INHERITS ); }
@@ -162,6 +169,7 @@ import java_cup.runtime.Symbol;
 
 <YYINITIAL>[A-Z][a-zA-Z0-9_]*      { return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
 <YYINITIAL>[a-z][a-zA-Z0-9_]*      { return new Symbol(TokenConstants.OBJECTID,AbstractTable.idtable.addString(yytext())); }
+<YYINITIAL>[0-9]+                  { return new Symbol(TokenConstants.INT_CONST,AbstractTable.inttable.addString(yytext())); }
 
 <YYINITIAL>[ \t\v\f\r]      { }
 <YYINITIAL>\n      { curr_lineno++; }
@@ -169,4 +177,5 @@ import java_cup.runtime.Symbol;
                                      in your lexical specification and
                                      will match match everything not
                                      matched by other lexical rules. */
-                                  System.err.println("LEXER BUG - UNMATCHED: " + yytext()); }
+                                  //System.err.println("LEXER BUG - UNMATCHED: " + yytext());
+                                  return new Symbol(TokenConstants.ERROR,yytext()); }
