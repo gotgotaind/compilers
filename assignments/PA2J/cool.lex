@@ -148,25 +148,25 @@ import java_cup.runtime.Symbol;
 <YYINITIAL>"@"			{ return new Symbol(TokenConstants.AT); }
 <YYINITIAL>"<-"			{ return new Symbol(TokenConstants.ASSIGN); }
 
-<YYINITIAL>class     { return new Symbol(TokenConstants.CLASS ); }
-<YYINITIAL>"inherits"      { return new Symbol(TokenConstants.INHERITS ); }
-<YYINITIAL>"else"      { return new Symbol(TokenConstants.ELSE ); }
-<YYINITIAL>"fi"      { return new Symbol(TokenConstants.FI ); }
-<YYINITIAL>"if"      { return new Symbol(TokenConstants.IF ); }
-<YYINITIAL>"in"      { return new Symbol(TokenConstants.IN ); }
-<YYINITIAL>"isvoid"			{ return new Symbol(TokenConstants.ISVOID); }
-<YYINITIAL>"let"      { return new Symbol(TokenConstants.LET ); }
-<YYINITIAL>"loop"      { return new Symbol(TokenConstants.LOOP ); }
-<YYINITIAL>"pool"      { return new Symbol(TokenConstants.POOL ); }
-<YYINITIAL>"then"      { return new Symbol(TokenConstants.THEN ); }
-<YYINITIAL>"while"      { return new Symbol(TokenConstants.WHILE ); }
-<YYINITIAL>"case"      { return new Symbol(TokenConstants.CASE ); }
-<YYINITIAL>"esac"      { return new Symbol(TokenConstants.ESAC ); }
-<YYINITIAL>"new"      { return new Symbol(TokenConstants.NEW ); }
-<YYINITIAL>"not"			{ return new Symbol(TokenConstants.NOT); }
-<YYINITIAL>"of"			{ return new Symbol(TokenConstants.OF); }
-<YYINITIAL>"true"			{ return new Symbol(TokenConstants.BOOL_CONST,true); }
-<YYINITIAL>"false"			{ return new Symbol(TokenConstants.BOOL_CONST,false); }
+<YYINITIAL>[cC][lL][aA][sS][sS]     { return new Symbol(TokenConstants.CLASS ); }
+<YYINITIAL>[iI][nN][hH][eE][rR][iI][tT][sS]     { return new Symbol(TokenConstants.INHERITS ); }
+<YYINITIAL>[eE][lL][sS][eE]      { return new Symbol(TokenConstants.ELSE ); }
+<YYINITIAL>[fF][iI]      { return new Symbol(TokenConstants.FI ); }
+<YYINITIAL>[iI][fF]      { return new Symbol(TokenConstants.IF ); }
+<YYINITIAL>[iI][nN]      { return new Symbol(TokenConstants.IN ); }
+<YYINITIAL>[iI][sS][vV][oO][iI][dD]			{ return new Symbol(TokenConstants.ISVOID); }
+<YYINITIAL>[lL][eE][tT]      { return new Symbol(TokenConstants.LET ); }
+<YYINITIAL>[lL][oO][oO][pP]      { return new Symbol(TokenConstants.LOOP ); }
+<YYINITIAL>[pP][oO][oO][lL]      { return new Symbol(TokenConstants.POOL ); }
+<YYINITIAL>[tT][hH][eE][nN]      { return new Symbol(TokenConstants.THEN ); }
+<YYINITIAL>[wW][hH][iI][lL][eE]      { return new Symbol(TokenConstants.WHILE ); }
+<YYINITIAL>[cC][aA][sS][eE]      { return new Symbol(TokenConstants.CASE ); }
+<YYINITIAL>[eE][sS][aA][cC]      { return new Symbol(TokenConstants.ESAC ); }
+<YYINITIAL>[nN][eE][wW]      { return new Symbol(TokenConstants.NEW ); }
+<YYINITIAL>[nN][oO][tT]			{ return new Symbol(TokenConstants.NOT); }
+<YYINITIAL>[oO][fF]			{ return new Symbol(TokenConstants.OF); }
+<YYINITIAL>t[rR][uU][eE]			{ return new Symbol(TokenConstants.BOOL_CONST,true); }
+<YYINITIAL>f[aA][lL][sS][eE]			{ return new Symbol(TokenConstants.BOOL_CONST,false); }
 
 <YYINITIAL>[A-Z][a-zA-Z0-9_]*      { return new Symbol(TokenConstants.TYPEID,AbstractTable.idtable.addString(yytext())); }
 <YYINITIAL>[a-z][a-zA-Z0-9_]*      { return new Symbol(TokenConstants.OBJECTID,AbstractTable.idtable.addString(yytext())); }
