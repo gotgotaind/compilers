@@ -68,7 +68,9 @@ import java_cup.runtime.Symbol;
     case BLOCKCOMMENT:
         yybegin(YYINITIAL);
         return new Symbol(TokenConstants.ERROR,"EOF in comment");
-    
+    case STRING:
+        yybegin(YYINITIAL);
+        return new Symbol(TokenConstants.ERROR,"EOF in string constant");    
     }
     return new Symbol(TokenConstants.EOF);
 %eofval}
