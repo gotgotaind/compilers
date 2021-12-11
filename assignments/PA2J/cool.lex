@@ -77,7 +77,7 @@ import java_cup.runtime.Symbol;
 
 %class CoolLexer
 %cup
-%state STRING,LINECOMMENT
+%state STRING,LINECOMMENT,NULLINSTRING
 %state BLOCKCOMMENT
 
 %%
@@ -87,16 +87,35 @@ import java_cup.runtime.Symbol;
                             string_buf=new StringBuffer();
                         }
 
-<STRING>\\b              {string_buf.append("\b");}
-<STRING>\\t              {string_buf.append("\t");}
-<STRING>\\n              {string_buf.append("\n");}
-<STRING>\\f              {string_buf.append("\f");}
-<STRING>\\.              {string_buf.append(yytext().substring(1,1));}
-<STRING>[^\"|\\]*        {string_buf.append(yytext());}
+<STRING,NULLINSTRING>\\b              {string_buf.append("\b");}
+<STRING,NULLINSTRING>\\t              {string_buf.append("\t");}
+<STRING,NULLINSTRING>\\n              {string_buf.append("\n");}
+<STRING,NULLINSTRING>\\f              {string_buf.append("\f");}
+<STRING,NULLINSTRING>\\\"              {string_buf.append("\"");}
+<STRING,NULLINSTRING>\\\\              {string_buf.append("\\");}
+<STRING,NULLINSTRING>\\              {string_buf.append(yytext().substring(1,1));}
 <STRING>\"              {
                             yybegin(YYINITIAL);
                             return new Symbol(TokenConstants.STR_CONST,AbstractTable.stringtable.addString(string_buf.toString()));
                         }
+<NULLINSTRING>\"              {
+                            yybegin(YYINITIAL);
+                            return new Symbol(TokenConstants.ERROR,"String contains null character.");
+                        }
+<STRING,NULLINSTRING>\\\n          {
+                        curr_lineno++;
+                        string_buf.append("\n");
+                    }
+<STRING,NULLINSTRING>\n          {
+                        curr_lineno++;
+                        string_buf=new StringBuffer();
+                        yybegin(YYINITIAL);
+                        return new Symbol(TokenConstants.ERROR,"Unterminated string constant");
+                    }
+<STRING>\0          {
+                        yybegin(NULLINSTRING);
+                    }
+<STRING,NULLINSTRING>.        {string_buf.append(yytext());}
 
 <YYINITIAL>--           {
                             yybegin(LINECOMMENT);
@@ -123,7 +142,6 @@ import java_cup.runtime.Symbol;
 
 <BLOCKCOMMENT>\n        {curr_lineno++;} 
 <BLOCKCOMMENT>.         {} 
-<BLOCKCOMMENT>.         {} 
 
 
 <YYINITIAL>"=>"			{ /* Sample lexical rule for "=>" arrow.
@@ -145,9 +163,10 @@ import java_cup.runtime.Symbol;
 <YYINITIAL>"."			{ return new Symbol(TokenConstants.DOT); }
 <YYINITIAL>"="			{ return new Symbol(TokenConstants.EQ); }
 <YYINITIAL>":"			{ return new Symbol(TokenConstants.COLON); }
-<YYINITIAL>"!"			{ return new Symbol(TokenConstants.NEG); }
+<YYINITIAL>"!"			{ return new Symbol(TokenConstants.NOT); }
 <YYINITIAL>"}"			{ return new Symbol(TokenConstants.RBRACE); }
 <YYINITIAL>"@"			{ return new Symbol(TokenConstants.AT); }
+<YYINITIAL>"~"			{ return new Symbol(TokenConstants.NEG); }
 <YYINITIAL>"<-"			{ return new Symbol(TokenConstants.ASSIGN); }
 
 <YYINITIAL>[cC][lL][aA][sS][sS]     { return new Symbol(TokenConstants.CLASS ); }
