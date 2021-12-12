@@ -92,8 +92,9 @@ import java_cup.runtime.Symbol;
 <STRING,NULLINSTRING>\\n              {string_buf.append("\n");}
 <STRING,NULLINSTRING>\\f              {string_buf.append("\f");}
 <STRING,NULLINSTRING>\\\"              {string_buf.append("\"");}
-<STRING,NULLINSTRING>\\\\              {string_buf.append("\\");}
-<STRING,NULLINSTRING>\\              {string_buf.append(yytext().substring(1,1));}
+<STRING,NULLINSTRING>\r              {string_buf.append("\r");}
+<STRING,NULLINSTRING>\033              {string_buf.append("\\033");}
+<STRING,NULLINSTRING>\\.              {string_buf.append(yytext().substring(1,2));}
 <STRING>\"              {
                             yybegin(YYINITIAL);
                             return new Symbol(TokenConstants.STR_CONST,AbstractTable.stringtable.addString(string_buf.toString()));
@@ -193,6 +194,8 @@ import java_cup.runtime.Symbol;
 <YYINITIAL>[a-z][a-zA-Z0-9_]*      { return new Symbol(TokenConstants.OBJECTID,AbstractTable.idtable.addString(yytext())); }
 <YYINITIAL>[0-9]+                  { return new Symbol(TokenConstants.INT_CONST,AbstractTable.inttable.addString(yytext())); }
 
+
+<YYINITIAL>\*\)                     { return new Symbol(TokenConstants.ERROR,"Unmatched *)"); }
 <YYINITIAL>[ \t\v\f\r]      { }
 <YYINITIAL>\n      { curr_lineno++; }
 .                               { /* This rule should be the very last
