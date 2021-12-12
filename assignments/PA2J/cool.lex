@@ -93,11 +93,20 @@ import java_cup.runtime.Symbol;
 <STRING,NULLINSTRING>\\f              {string_buf.append("\f");}
 <STRING,NULLINSTRING>\\\"              {string_buf.append("\"");}
 <STRING,NULLINSTRING>\r              {string_buf.append("\r");}
-<STRING,NULLINSTRING>\033              {string_buf.append("\\033");}
+<STRING,NULLINSTRING>\033              {string_buf.append("\033");}
+<STRING>\\\0          {
+                        yybegin(NULLINSTRING);
+                    }
 <STRING,NULLINSTRING>\\.              {string_buf.append(yytext().substring(1,2));}
 <STRING>\"              {
                             yybegin(YYINITIAL);
-                            return new Symbol(TokenConstants.STR_CONST,AbstractTable.stringtable.addString(string_buf.toString()));
+                            if( string_buf.length() > 1024 ) {
+                                return new Symbol(TokenConstants.ERROR,"String constant too long");
+                            }
+                            else
+                            {
+                                return new Symbol(TokenConstants.STR_CONST,AbstractTable.stringtable.addString(string_buf.toString()));
+                            }
                         }
 <NULLINSTRING>\"              {
                             yybegin(YYINITIAL);
@@ -164,7 +173,6 @@ import java_cup.runtime.Symbol;
 <YYINITIAL>"."			{ return new Symbol(TokenConstants.DOT); }
 <YYINITIAL>"="			{ return new Symbol(TokenConstants.EQ); }
 <YYINITIAL>":"			{ return new Symbol(TokenConstants.COLON); }
-<YYINITIAL>"!"			{ return new Symbol(TokenConstants.NOT); }
 <YYINITIAL>"}"			{ return new Symbol(TokenConstants.RBRACE); }
 <YYINITIAL>"@"			{ return new Symbol(TokenConstants.AT); }
 <YYINITIAL>"~"			{ return new Symbol(TokenConstants.NEG); }
@@ -196,7 +204,7 @@ import java_cup.runtime.Symbol;
 
 
 <YYINITIAL>\*\)                     { return new Symbol(TokenConstants.ERROR,"Unmatched *)"); }
-<YYINITIAL>[ \t\v\f\r]      { }
+<YYINITIAL>[ \t\v\f\r\013]      { }
 <YYINITIAL>\n      { curr_lineno++; }
 .                               { /* This rule should be the very last
                                      in your lexical specification and
