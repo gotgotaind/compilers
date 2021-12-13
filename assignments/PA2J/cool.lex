@@ -77,6 +77,7 @@ import java_cup.runtime.Symbol;
 
 %class CoolLexer
 %cup
+%full
 %state STRING,LINECOMMENT,NULLINSTRING
 %state BLOCKCOMMENT
 
@@ -150,6 +151,28 @@ import java_cup.runtime.Symbol;
                             }
                         }  
 
+<BLOCKCOMMENT>\015              {string_buf.append("\015");}
+<BLOCKCOMMENT>\016              {string_buf.append("\016");}
+<BLOCKCOMMENT>\017              {string_buf.append("\017");}
+<BLOCKCOMMENT>\018              {string_buf.append("\018");}
+<BLOCKCOMMENT>\019              {string_buf.append("\019");}
+<BLOCKCOMMENT>\020              {string_buf.append("\020");}
+<BLOCKCOMMENT>\021              {string_buf.append("\021");}
+<BLOCKCOMMENT>\022              {string_buf.append("\022");}
+<BLOCKCOMMENT>\023              {string_buf.append("\023");}
+<BLOCKCOMMENT>\024              {string_buf.append("\024");}
+<BLOCKCOMMENT>\025              {string_buf.append("\025");}
+<BLOCKCOMMENT>\026              {string_buf.append("\026");}
+<BLOCKCOMMENT>\027              {string_buf.append("\027");}
+<BLOCKCOMMENT>\028              {string_buf.append("\028");}
+<BLOCKCOMMENT>\029              {string_buf.append("\029");}
+<BLOCKCOMMENT>\030              {string_buf.append("\030");}
+<BLOCKCOMMENT>\031              {string_buf.append("\031");}
+<BLOCKCOMMENT>\032              {string_buf.append("\032");}
+<BLOCKCOMMENT>\033              {string_buf.append("\033");}
+<BLOCKCOMMENT>\034              {string_buf.append("\034");}
+<BLOCKCOMMENT>\035              {string_buf.append("\035");}
+<BLOCKCOMMENT>\036              {string_buf.append("\036");}
 <BLOCKCOMMENT>\n        {curr_lineno++;} 
 <BLOCKCOMMENT>.         {} 
 

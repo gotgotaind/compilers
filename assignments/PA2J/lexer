@@ -1,2 +1,2 @@
 #!/bin/sh
-java -classpath /usr/class/lib/java-cup-11a.jar:/usr/class/lib/jlex.jar:.:/usr/java/lib/rt.jar:`dirname $0` Lexer $*
+java -classpath /usr/class/compilers/lib/java-cup-11a.jar:/usr/class/compilers/lib/jlex.jar:.:/usr/java/lib/rt.jar:`dirname $0` Lexer $*
