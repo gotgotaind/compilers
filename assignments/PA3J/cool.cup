@@ -69,6 +69,7 @@ nonterminal Classes class_list;
 nonterminal class_c class;
 nonterminal Features feature_list;
 nonterminal Feature feature;
+nonterminal Expression expr;
 
 /* Precedence declarations go here. */
 
@@ -102,4 +103,8 @@ feature_list
 	    {: RESULT = new Features(curr_lineno()); :}
 	| feature_list:fl feature:f
 		{: RESULT = fl.appendElement(f); :}
+	;
+
+feature
+	::= OBJECTID:o LPAREN RPAREN COLON TYPEID:t LBRACE expr:e RBRACE
 	;
