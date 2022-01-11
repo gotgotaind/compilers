@@ -74,37 +74,30 @@ nonterminal Expression expr;
 /* Precedence declarations go here. */
 
 program	
-	::= class_list:cl
-	    {: RESULT = new programc(curr_lineno(), cl); :}
+	::= class_list:cl														    {: RESULT = new programc(curr_lineno(), cl); :}
         ;
 
 class_list
 	/* single class */
-	::= class:c
-	    {: RESULT = (new Classes(curr_lineno())).appendElement(c); :}
+	::= class:c																    {: RESULT = (new Classes(curr_lineno())).appendElement(c); :}
 	/* several classes */
-	| class_list:cl class:c
-	    {: RESULT = cl.appendElement(c); :}
+	| class_list:cl class:c													    {: RESULT = cl.appendElement(c); :}
 	;
 
 /* If no parent is specified, the class inherits from the Object class */
 class
-	::= CLASS TYPEID:n LBRACE feature_list:fl RBRACE SEMI
-	    {: RESULT = new class_c(curr_lineno(), n, 
-		                   AbstractTable.idtable.addString("Object"), 
-				   fl, curr_filename()); :}
-	| CLASS TYPEID:n INHERITS TYPEID:p LBRACE feature_list:fl RBRACE SEMI
-	    {: RESULT = new class_c(curr_lineno(), n, p, fl, curr_filename()); :}
+	::= CLASS TYPEID:n LBRACE feature_list:fl RBRACE SEMI					    {: RESULT = new class_c(curr_lineno(), n, AbstractTable.idtable.addString("Object"), fl, curr_filename()); :}
+	| CLASS TYPEID:n INHERITS TYPEID:p LBRACE feature_list:fl RBRACE SEMI	    {: RESULT = new class_c(curr_lineno(), n, p, fl, curr_filename()); :}
 	;
 
 /* Feature list may be empty, but no empty features in list. */
 feature_list
-	::= /* empty */
-	    {: RESULT = new Features(curr_lineno()); :}
-	| feature_list:fl feature:f
-		{: RESULT = fl.appendElement(f); :}
+	::= feature_list:fl feature:f												{: RESULT = fl.appendElement(f); :}
+	|	/* empty */																{: RESULT = new Features(curr_lineno()); :}
 	;
 
 feature
-	::= OBJECTID:o LPAREN RPAREN COLON TYPEID:t LBRACE expr:e RBRACE
+	::= OBJECTID:o LPAREN formal_list:formal_l RPAREN COLON TYPEID:t LBRACE expr:e RBRACE SEMI
+	|	OBJECTID:o COLON TYPEID:t DARROW expr:e
+	|	OBJECTID:o COLON TYPEID:t
 	;
