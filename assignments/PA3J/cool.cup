@@ -70,6 +70,7 @@ nonterminal class_c class;
 nonterminal Features feature_list;
 nonterminal Feature feature;
 nonterminal Expression expr;
+nonterminal Formals formal_list;
 
 /* Precedence declarations go here. */
 
