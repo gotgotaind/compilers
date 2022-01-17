@@ -1,2 +1,2 @@
 #!/bin/sh
-java -classpath `dirname $0`/../../lib:.:`dirname $0` Parser $*
+java -classpath ../../lib:.:`dirname $0` Parser $*

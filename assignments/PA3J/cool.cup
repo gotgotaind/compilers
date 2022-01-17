@@ -93,12 +93,12 @@ class
 
 /* Feature list may be empty, but no empty features in list. */
 feature_list
-	::= feature_list:fl feature:f												{: RESULT = fl.appendElement(f); :}
+	::= feature_list:fl feature:f SEMI												{: RESULT = fl.appendElement(f); :}
 	|	/* empty */																{: RESULT = new Features(curr_lineno()); :}
 	;
 
 feature
 	::= OBJECTID:o LPAREN formal_list:formal_l RPAREN COLON TYPEID:t LBRACE expr:e RBRACE SEMI
 	|	OBJECTID:o COLON TYPEID:t DARROW expr:e
-	|	OBJECTID:o COLON TYPEID:t
+	|	OBJECTID:o COLON TYPEID:t												{: RESULT = new attr(curr_lineno(),o,t,new no_expr(curr_lineno())); :}
 	;

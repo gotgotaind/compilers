@@ -53,7 +53,7 @@ Warning : Terminal "AT" was declared but never used
 [3] class_list ::= class_list class 
 [4] class ::= CLASS TYPEID LBRACE feature_list RBRACE SEMI 
 [5] class ::= CLASS TYPEID INHERITS TYPEID LBRACE feature_list RBRACE SEMI 
-[6] feature_list ::= feature_list feature 
+[6] feature_list ::= feature_list feature SEMI 
 [7] feature_list ::= 
 [8] feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE SEMI 
 [9] feature ::= OBJECTID COLON TYPEID DARROW expr 
@@ -81,13 +81,13 @@ lalr_state [1]: {
   [program ::= class_list (*) , {EOF }]
 }
 transition on CLASS to state [4]
-transition on class to state [32]
+transition on class to state [33]
 
 -------------------
 lalr_state [2]: {
   [$START ::= program (*) EOF , {EOF }]
 }
-transition on EOF to state [31]
+transition on EOF to state [32]
 
 -------------------
 lalr_state [3]: {
@@ -113,9 +113,9 @@ transition on LBRACE to state [6]
 lalr_state [6]: {
   [class ::= CLASS TYPEID LBRACE (*) feature_list RBRACE SEMI , {EOF CLASS }]
   [feature_list ::= (*) , {RBRACE OBJECTID }]
-  [feature_list ::= (*) feature_list feature , {RBRACE OBJECTID }]
+  [feature_list ::= (*) feature_list feature SEMI , {RBRACE OBJECTID }]
 }
-transition on feature_list to state [28]
+transition on feature_list to state [29]
 
 -------------------
 lalr_state [7]: {
@@ -133,17 +133,17 @@ transition on LBRACE to state [9]
 lalr_state [9]: {
   [feature_list ::= (*) , {RBRACE OBJECTID }]
   [class ::= CLASS TYPEID INHERITS TYPEID LBRACE (*) feature_list RBRACE SEMI , {EOF CLASS }]
-  [feature_list ::= (*) feature_list feature , {RBRACE OBJECTID }]
+  [feature_list ::= (*) feature_list feature SEMI , {RBRACE OBJECTID }]
 }
 transition on feature_list to state [10]
 
 -------------------
 lalr_state [10]: {
-  [feature ::= (*) OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE SEMI , {RBRACE OBJECTID }]
-  [feature ::= (*) OBJECTID COLON TYPEID , {RBRACE OBJECTID }]
+  [feature ::= (*) OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE SEMI , {SEMI }]
+  [feature ::= (*) OBJECTID COLON TYPEID , {SEMI }]
   [class ::= CLASS TYPEID INHERITS TYPEID LBRACE feature_list (*) RBRACE SEMI , {EOF CLASS }]
-  [feature ::= (*) OBJECTID COLON TYPEID DARROW expr , {RBRACE OBJECTID }]
-  [feature_list ::= feature_list (*) feature , {RBRACE OBJECTID }]
+  [feature ::= (*) OBJECTID COLON TYPEID DARROW expr , {SEMI }]
+  [feature_list ::= feature_list (*) feature SEMI , {RBRACE OBJECTID }]
 }
 transition on RBRACE to state [13]
 transition on OBJECTID to state [12]
@@ -151,14 +151,15 @@ transition on feature to state [11]
 
 -------------------
 lalr_state [11]: {
-  [feature_list ::= feature_list feature (*) , {RBRACE OBJECTID }]
+  [feature_list ::= feature_list feature (*) SEMI , {RBRACE OBJECTID }]
 }
+transition on SEMI to state [28]
 
 -------------------
 lalr_state [12]: {
-  [feature ::= OBJECTID (*) COLON TYPEID , {RBRACE OBJECTID }]
-  [feature ::= OBJECTID (*) COLON TYPEID DARROW expr , {RBRACE OBJECTID }]
-  [feature ::= OBJECTID (*) LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE SEMI , {RBRACE OBJECTID }]
+  [feature ::= OBJECTID (*) COLON TYPEID , {SEMI }]
+  [feature ::= OBJECTID (*) COLON TYPEID DARROW expr , {SEMI }]
+  [feature ::= OBJECTID (*) LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE SEMI , {SEMI }]
 }
 transition on LPAREN to state [16]
 transition on COLON to state [15]
@@ -176,112 +177,117 @@ lalr_state [14]: {
 
 -------------------
 lalr_state [15]: {
-  [feature ::= OBJECTID COLON (*) TYPEID , {RBRACE OBJECTID }]
-  [feature ::= OBJECTID COLON (*) TYPEID DARROW expr , {RBRACE OBJECTID }]
+  [feature ::= OBJECTID COLON (*) TYPEID , {SEMI }]
+  [feature ::= OBJECTID COLON (*) TYPEID DARROW expr , {SEMI }]
 }
 transition on TYPEID to state [25]
 
 -------------------
 lalr_state [16]: {
-  [feature ::= OBJECTID LPAREN (*) formal_list RPAREN COLON TYPEID LBRACE expr RBRACE SEMI , {RBRACE OBJECTID }]
+  [feature ::= OBJECTID LPAREN (*) formal_list RPAREN COLON TYPEID LBRACE expr RBRACE SEMI , {SEMI }]
 }
 transition on formal_list to state [17]
 
 -------------------
 lalr_state [17]: {
-  [feature ::= OBJECTID LPAREN formal_list (*) RPAREN COLON TYPEID LBRACE expr RBRACE SEMI , {RBRACE OBJECTID }]
+  [feature ::= OBJECTID LPAREN formal_list (*) RPAREN COLON TYPEID LBRACE expr RBRACE SEMI , {SEMI }]
 }
 transition on RPAREN to state [18]
 
 -------------------
 lalr_state [18]: {
-  [feature ::= OBJECTID LPAREN formal_list RPAREN (*) COLON TYPEID LBRACE expr RBRACE SEMI , {RBRACE OBJECTID }]
+  [feature ::= OBJECTID LPAREN formal_list RPAREN (*) COLON TYPEID LBRACE expr RBRACE SEMI , {SEMI }]
 }
 transition on COLON to state [19]
 
 -------------------
 lalr_state [19]: {
-  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON (*) TYPEID LBRACE expr RBRACE SEMI , {RBRACE OBJECTID }]
+  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON (*) TYPEID LBRACE expr RBRACE SEMI , {SEMI }]
 }
 transition on TYPEID to state [20]
 
 -------------------
 lalr_state [20]: {
-  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID (*) LBRACE expr RBRACE SEMI , {RBRACE OBJECTID }]
+  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID (*) LBRACE expr RBRACE SEMI , {SEMI }]
 }
 transition on LBRACE to state [21]
 
 -------------------
 lalr_state [21]: {
-  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE (*) expr RBRACE SEMI , {RBRACE OBJECTID }]
+  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE (*) expr RBRACE SEMI , {SEMI }]
 }
 transition on expr to state [22]
 
 -------------------
 lalr_state [22]: {
-  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr (*) RBRACE SEMI , {RBRACE OBJECTID }]
+  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr (*) RBRACE SEMI , {SEMI }]
 }
 transition on RBRACE to state [23]
 
 -------------------
 lalr_state [23]: {
-  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE (*) SEMI , {RBRACE OBJECTID }]
+  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE (*) SEMI , {SEMI }]
 }
 transition on SEMI to state [24]
 
 -------------------
 lalr_state [24]: {
-  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE SEMI (*) , {RBRACE OBJECTID }]
+  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE SEMI (*) , {SEMI }]
 }
 
 -------------------
 lalr_state [25]: {
-  [feature ::= OBJECTID COLON TYPEID (*) , {RBRACE OBJECTID }]
-  [feature ::= OBJECTID COLON TYPEID (*) DARROW expr , {RBRACE OBJECTID }]
+  [feature ::= OBJECTID COLON TYPEID (*) , {SEMI }]
+  [feature ::= OBJECTID COLON TYPEID (*) DARROW expr , {SEMI }]
 }
 transition on DARROW to state [26]
 
 -------------------
 lalr_state [26]: {
-  [feature ::= OBJECTID COLON TYPEID DARROW (*) expr , {RBRACE OBJECTID }]
+  [feature ::= OBJECTID COLON TYPEID DARROW (*) expr , {SEMI }]
 }
 transition on expr to state [27]
 
 -------------------
 lalr_state [27]: {
-  [feature ::= OBJECTID COLON TYPEID DARROW expr (*) , {RBRACE OBJECTID }]
+  [feature ::= OBJECTID COLON TYPEID DARROW expr (*) , {SEMI }]
 }
 
 -------------------
 lalr_state [28]: {
-  [feature ::= (*) OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE SEMI , {RBRACE OBJECTID }]
-  [class ::= CLASS TYPEID LBRACE feature_list (*) RBRACE SEMI , {EOF CLASS }]
-  [feature ::= (*) OBJECTID COLON TYPEID , {RBRACE OBJECTID }]
-  [feature ::= (*) OBJECTID COLON TYPEID DARROW expr , {RBRACE OBJECTID }]
-  [feature_list ::= feature_list (*) feature , {RBRACE OBJECTID }]
+  [feature_list ::= feature_list feature SEMI (*) , {RBRACE OBJECTID }]
 }
-transition on RBRACE to state [29]
+
+-------------------
+lalr_state [29]: {
+  [feature ::= (*) OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE SEMI , {SEMI }]
+  [class ::= CLASS TYPEID LBRACE feature_list (*) RBRACE SEMI , {EOF CLASS }]
+  [feature ::= (*) OBJECTID COLON TYPEID , {SEMI }]
+  [feature ::= (*) OBJECTID COLON TYPEID DARROW expr , {SEMI }]
+  [feature_list ::= feature_list (*) feature SEMI , {RBRACE OBJECTID }]
+}
+transition on RBRACE to state [30]
 transition on OBJECTID to state [12]
 transition on feature to state [11]
 
 -------------------
-lalr_state [29]: {
+lalr_state [30]: {
   [class ::= CLASS TYPEID LBRACE feature_list RBRACE (*) SEMI , {EOF CLASS }]
 }
-transition on SEMI to state [30]
+transition on SEMI to state [31]
 
 -------------------
-lalr_state [30]: {
+lalr_state [31]: {
   [class ::= CLASS TYPEID LBRACE feature_list RBRACE SEMI (*) , {EOF CLASS }]
 }
 
 -------------------
-lalr_state [31]: {
+lalr_state [32]: {
   [$START ::= program EOF (*) , {EOF }]
 }
 
 -------------------
-lalr_state [32]: {
+lalr_state [33]: {
   [class_list ::= class_list class (*) , {EOF CLASS }]
 }
 
@@ -292,7 +298,7 @@ From state #0
 From state #1
  [term 0:REDUCE(with prod 0)] [term 2:SHIFT(to state 4)]
 From state #2
- [term 0:SHIFT(to state 31)]
+ [term 0:SHIFT(to state 32)]
 From state #3
  [term 0:REDUCE(with prod 2)] [term 2:REDUCE(with prod 2)]
 From state #4
@@ -310,7 +316,7 @@ From state #9
 From state #10
  [term 39:SHIFT(to state 13)] [term 44:SHIFT(to state 12)]
 From state #11
- [term 39:REDUCE(with prod 6)] [term 44:REDUCE(with prod 6)]
+ [term 33:SHIFT(to state 28)]
 From state #12
  [term 34:SHIFT(to state 15)] [term 35:SHIFT(to state 16)]
 From state #13
@@ -334,35 +340,36 @@ From state #22
 From state #23
  [term 33:SHIFT(to state 24)]
 From state #24
- [term 39:REDUCE(with prod 8)] [term 44:REDUCE(with prod 8)]
+ [term 33:REDUCE(with prod 8)]
 From state #25
- [term 17:SHIFT(to state 26)] [term 39:REDUCE(with prod 10)]
- [term 44:REDUCE(with prod 10)]
+ [term 17:SHIFT(to state 26)] [term 33:REDUCE(with prod 10)]
 From state #26
 From state #27
- [term 39:REDUCE(with prod 9)] [term 44:REDUCE(with prod 9)]
+ [term 33:REDUCE(with prod 9)]
 From state #28
- [term 39:SHIFT(to state 29)] [term 44:SHIFT(to state 12)]
+ [term 39:REDUCE(with prod 6)] [term 44:REDUCE(with prod 6)]
 From state #29
- [term 33:SHIFT(to state 30)]
+ [term 39:SHIFT(to state 30)] [term 44:SHIFT(to state 12)]
 From state #30
- [term 0:REDUCE(with prod 4)] [term 2:REDUCE(with prod 4)]
+ [term 33:SHIFT(to state 31)]
 From state #31
- [term 0:REDUCE(with prod 1)]
+ [term 0:REDUCE(with prod 4)] [term 2:REDUCE(with prod 4)]
 From state #32
+ [term 0:REDUCE(with prod 1)]
+From state #33
  [term 0:REDUCE(with prod 3)] [term 2:REDUCE(with prod 3)]
 ------------------------------
 -------- REDUCE_TABLE --------
 From state #0
  [non term 0->state 2] [non term 1->state 1] [non term 2->state 3]
 From state #1
- [non term 2->state 32]
+ [non term 2->state 33]
 From state #2
 From state #3
 From state #4
 From state #5
 From state #6
- [non term 3->state 28]
+ [non term 3->state 29]
 From state #7
 From state #8
 From state #9
@@ -390,16 +397,17 @@ From state #26
  [non term 5->state 27]
 From state #27
 From state #28
- [non term 4->state 11]
 From state #29
+ [non term 4->state 11]
 From state #30
 From state #31
 From state #32
+From state #33
 -----------------------------
 ------- CUP v0.11a beta 20060608 Parser Generation Summary -------
   0 errors and 32 warnings
   45 terminals, 7 non-terminals, and 11 productions declared, 
-  producing 33 unique parse states.
+  producing 34 unique parse states.
   32 terminals declared but not used.
   0 non-terminals declared but not used.
   0 productions never reduced.
