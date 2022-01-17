@@ -1,2 +1,2 @@
-!/bin/csh -f
+#!/bin/csh -f
 /usr/class/compilers/bin/lexer $* | /usr/class/compilers/bin/parser $*
