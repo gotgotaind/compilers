@@ -2,15 +2,15 @@
 _program
   #1
   _class
-    Hello
-    Object
-    "grading/classonefield.test"
+    A
+    IO
+    "good.cl"
     (
-    #2
-    _attr
-      foo
-      Int
-      #0
-      _no_expr
-      : _no_type
+    )
+  #4
+  _class
+    BB__
+    A
+    "good.cl"
+    (
     )

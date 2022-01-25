@@ -99,7 +99,7 @@ feature_list
 	;
 
 feature
-	::= OBJECTID:o LPAREN formal_list:formal_l RPAREN COLON TYPEID:t LBRACE expr:e RBRACE SEMI
+	::= OBJECTID:o LPAREN formal_list:formal_l RPAREN COLON TYPEID:t LBRACE expr:e RBRACE SEMI {: RESULT = new method(curr_lineno(),o,formal_l,t,e); :}
 	|	OBJECTID:o COLON TYPEID:t DARROW expr:e									{: RESULT = new attr(curr_lineno(),o,t,e); :}
 	|	OBJECTID:o COLON TYPEID:t												{: RESULT = new attr(curr_lineno(),o,t,new no_expr(curr_lineno())); :}
 	;
@@ -107,6 +107,8 @@ feature
 formal_list
 	::= formal:f																{: RESULT = (new Formals(curr_lineno())).appendElement(f); :}
 	| formal:f COMMA formal_list:fl 											{: RESULT = fl.appendElement(f); :}
+	| 																			{: RESULT = (new Formals(curr_lineno())); :}
+
 	;
 
 formal

@@ -59,7 +59,8 @@ Warning : Terminal "AT" was declared but never used
 [10] feature ::= OBJECTID COLON TYPEID 
 [11] formal_list ::= formal 
 [12] formal_list ::= formal COMMA formal_list 
-[13] formal ::= OBJECTID COLON TYPEID 
+[13] formal_list ::= 
+[14] formal ::= OBJECTID COLON TYPEID 
 
 ===== Viable Prefix Recognizer =====
 START lalr_state [0]: {
@@ -186,13 +187,14 @@ transition on TYPEID to state [31]
 
 -------------------
 lalr_state [16]: {
-  [formal ::= (*) OBJECTID COLON TYPEID , {COMMA RPAREN }]
+  [formal_list ::= (*) , {RPAREN }]
   [formal_list ::= (*) formal COMMA formal_list , {RPAREN }]
+  [formal ::= (*) OBJECTID COLON TYPEID , {COMMA RPAREN }]
   [feature ::= OBJECTID LPAREN (*) formal_list RPAREN COLON TYPEID LBRACE expr RBRACE SEMI , {SEMI }]
   [formal_list ::= (*) formal , {RPAREN }]
 }
-transition on OBJECTID to state [19]
-transition on formal to state [18]
+transition on formal to state [19]
+transition on OBJECTID to state [18]
 transition on formal_list to state [17]
 
 -------------------
@@ -203,42 +205,43 @@ transition on RPAREN to state [24]
 
 -------------------
 lalr_state [18]: {
-  [formal_list ::= formal (*) COMMA formal_list , {RPAREN }]
-  [formal_list ::= formal (*) , {RPAREN }]
+  [formal ::= OBJECTID (*) COLON TYPEID , {COMMA RPAREN }]
 }
-transition on COMMA to state [22]
+transition on COLON to state [22]
 
 -------------------
 lalr_state [19]: {
-  [formal ::= OBJECTID (*) COLON TYPEID , {COMMA RPAREN }]
+  [formal_list ::= formal (*) COMMA formal_list , {RPAREN }]
+  [formal_list ::= formal (*) , {RPAREN }]
 }
-transition on COLON to state [20]
+transition on COMMA to state [20]
 
 -------------------
 lalr_state [20]: {
-  [formal ::= OBJECTID COLON (*) TYPEID , {COMMA RPAREN }]
+  [formal_list ::= (*) , {RPAREN }]
+  [formal_list ::= formal COMMA (*) formal_list , {RPAREN }]
+  [formal_list ::= (*) formal COMMA formal_list , {RPAREN }]
+  [formal ::= (*) OBJECTID COLON TYPEID , {COMMA RPAREN }]
+  [formal_list ::= (*) formal , {RPAREN }]
 }
-transition on TYPEID to state [21]
+transition on formal to state [19]
+transition on OBJECTID to state [18]
+transition on formal_list to state [21]
 
 -------------------
 lalr_state [21]: {
-  [formal ::= OBJECTID COLON TYPEID (*) , {COMMA RPAREN }]
+  [formal_list ::= formal COMMA formal_list (*) , {RPAREN }]
 }
 
 -------------------
 lalr_state [22]: {
-  [formal ::= (*) OBJECTID COLON TYPEID , {COMMA RPAREN }]
-  [formal_list ::= formal COMMA (*) formal_list , {RPAREN }]
-  [formal_list ::= (*) formal COMMA formal_list , {RPAREN }]
-  [formal_list ::= (*) formal , {RPAREN }]
+  [formal ::= OBJECTID COLON (*) TYPEID , {COMMA RPAREN }]
 }
-transition on OBJECTID to state [19]
-transition on formal to state [18]
-transition on formal_list to state [23]
+transition on TYPEID to state [23]
 
 -------------------
 lalr_state [23]: {
-  [formal_list ::= formal COMMA formal_list (*) , {RPAREN }]
+  [formal ::= OBJECTID COLON TYPEID (*) , {COMMA RPAREN }]
 }
 
 -------------------
@@ -373,21 +376,21 @@ From state #14
 From state #15
  [term 43:SHIFT(to state 31)]
 From state #16
- [term 44:SHIFT(to state 19)]
+ [term 36:REDUCE(with prod 13)] [term 44:SHIFT(to state 18)]
 From state #17
  [term 36:SHIFT(to state 24)]
 From state #18
- [term 32:SHIFT(to state 22)] [term 36:REDUCE(with prod 11)]
+ [term 34:SHIFT(to state 22)]
 From state #19
- [term 34:SHIFT(to state 20)]
+ [term 32:SHIFT(to state 20)] [term 36:REDUCE(with prod 11)]
 From state #20
- [term 43:SHIFT(to state 21)]
+ [term 36:REDUCE(with prod 13)] [term 44:SHIFT(to state 18)]
 From state #21
- [term 32:REDUCE(with prod 13)] [term 36:REDUCE(with prod 13)]
-From state #22
- [term 44:SHIFT(to state 19)]
-From state #23
  [term 36:REDUCE(with prod 12)]
+From state #22
+ [term 43:SHIFT(to state 23)]
+From state #23
+ [term 32:REDUCE(with prod 14)] [term 36:REDUCE(with prod 14)]
 From state #24
  [term 34:SHIFT(to state 25)]
 From state #25
@@ -442,14 +445,14 @@ From state #13
 From state #14
 From state #15
 From state #16
- [non term 6->state 17] [non term 7->state 18]
+ [non term 6->state 17] [non term 7->state 19]
 From state #17
 From state #18
 From state #19
 From state #20
+ [non term 6->state 21] [non term 7->state 19]
 From state #21
 From state #22
- [non term 6->state 23] [non term 7->state 18]
 From state #23
 From state #24
 From state #25
@@ -473,7 +476,7 @@ From state #39
 -----------------------------
 ------- CUP v0.11a beta 20060608 Parser Generation Summary -------
   0 errors and 31 warnings
-  45 terminals, 8 non-terminals, and 14 productions declared, 
+  45 terminals, 8 non-terminals, and 15 productions declared, 
   producing 40 unique parse states.
   31 terminals declared but not used.
   0 non-terminals declared but not used.
