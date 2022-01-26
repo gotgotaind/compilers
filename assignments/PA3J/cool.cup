@@ -94,7 +94,7 @@ class
 
 /* Feature list may be empty, but no empty features in list. */
 feature_list
-	::= feature_list:fl feature:f SEMI												{: RESULT = fl.appendElement(f); :}
+	::= feature_list:fl feature:f												{: RESULT = fl.appendElement(f); :}
 	|	/* empty */																{: RESULT = new Features(curr_lineno()); :}
 	;
 
@@ -113,4 +113,10 @@ formal_list
 
 formal
 	::= OBJECTID:o COLON TYPEID:t												{: RESULT = new formalc(curr_lineno(),o,t); :}
+	;
+
+expr
+	::= STR_CONST:s															{: RESULT = new string_const(curr_lineno(),s); :}
+	| OBJECTID:o															{: RESULT = new object(curr_lineno(),o); :}
+	|																		{: RESULT = (new no_expr(curr_lineno())); :}
 	;
