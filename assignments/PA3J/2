@@ -6,8 +6,26 @@ _program
     IO
     "good.cl"
     (
+    #2
+    _method
+      main
+      SELF_TYPE
+      #4
+      _dispatch
+        #4
+        _object
+          self
+        : _no_type
+        out_string
+        (
+        #4
+        _string
+          "Hello, World.\n"
+        : _no_type
+        )
+      : _no_type
     )
-  #4
+  #8
   _class
     BB__
     A
