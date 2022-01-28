@@ -69,7 +69,7 @@ nonterminal Classes class_list;
 nonterminal class_c class;
 nonterminal Features feature_list;
 nonterminal Feature feature;
-nonterminal Expression expr;
+nonterminal Expression expr,expr_semi;
 nonterminal Formals formal_list;
 nonterminal Formal formal;
 
@@ -127,8 +127,13 @@ expr
 
 expr_semi_list
 	::=
-	expr:e							{: RESULT = new Expressions(curr_lineno()).appendElement(e); :}
-	| expr_semi_list:esl SEMI expr:e SEMI   	{: RESULT = esl.appendElement(e); :}
+	expr_semi:e							{: RESULT = new Expressions(curr_lineno()).appendElement(e); :}
+	| expr_semi_list:esl expr_semi:e   	{: RESULT = esl.appendElement(e); :}
+	;
+
+expr_semi
+	::=
+	expr:e SEMI					{: RESULT = e; :}
 	;
 
 exprs_opt

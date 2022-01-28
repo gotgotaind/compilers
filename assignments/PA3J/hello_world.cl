@@ -3,7 +3,7 @@ class Main inherits IO {
       {
       out_string("Hello, World.\n");
       out_string("\n");
-      out_string("sdkk");
+      out_string("arrrr");
       }
    };
 };

@@ -1,0 +1,58 @@
+#9
+_program
+  #9
+  _class
+    Main
+    IO
+    "hello_world.cl"
+    (
+    #9
+    _method
+      main
+      SELF_TYPE
+      #8
+      _block
+        #4
+        _dispatch
+          #4
+          _object
+            self
+          : _no_type
+          out_string
+          (
+          #4
+          _string
+            "Hello, World.\n"
+          : _no_type
+          )
+        : _no_type
+        #5
+        _dispatch
+          #5
+          _object
+            self
+          : _no_type
+          out_string
+          (
+          #5
+          _string
+            "\n"
+          : _no_type
+          )
+        : _no_type
+        #6
+        _dispatch
+          #6
+          _object
+            self
+          : _no_type
+          out_string
+          (
+          #6
+          _string
+            "arrrr"
+          : _no_type
+          )
+        : _no_type
+      : _no_type
+    )

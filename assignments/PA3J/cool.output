@@ -28,27 +28,27 @@ Warning : Terminal "LET_STMT" was declared but never used
 Warning : Terminal "THEN" was declared but never used
 Warning : Terminal "BOOL_CONST" was declared but never used
 Warning : Terminal "AT" was declared but never used
-Warning : *** Reduce/Reduce conflict found in state #34
-  between exprs_opt ::= (*) 
-  and     expr ::= (*) 
-  under symbols: {RPAREN}
-  Resolved in favor of the second production.
-
-Warning : *** Shift/Reduce conflict found in state #34
-  between exprs_opt ::= (*) 
-  under symbol RPAREN
-  Resolved in favor of shifting.
-
-Warning : *** Shift/Reduce conflict found in state #34
-  between expr ::= (*) 
-  under symbol RPAREN
-  Resolved in favor of shifting.
-
 Warning : *** Shift/Reduce conflict found in state #48
   between expr ::= (*) 
   and     expr ::= (*) OBJECTID 
   and     expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN 
   under symbol OBJECTID
+  Resolved in favor of shifting.
+
+Warning : *** Reduce/Reduce conflict found in state #34
+  between expr ::= (*) 
+  and     exprs_opt ::= (*) 
+  under symbols: {RPAREN}
+  Resolved in favor of the first production.
+
+Warning : *** Shift/Reduce conflict found in state #34
+  between expr ::= (*) 
+  under symbol RPAREN
+  Resolved in favor of shifting.
+
+Warning : *** Shift/Reduce conflict found in state #34
+  between exprs_opt ::= (*) 
+  under symbol RPAREN
   Resolved in favor of shifting.
 
 Warning : *** Production "exprs_opt ::= " never reduced
@@ -66,8 +66,8 @@ Warning : *** Production "exprs_opt ::= " never reduced
 
 ===== Non terminals =====
 [0]program [1]class_list [2]class [3]feature_list [4]feature 
-[5]expr [6]formal_list [7]formal [8]exprs_opt [9]exprs 
-[10]expr_semi_list 
+[5]expr [6]expr_semi [7]formal_list [8]formal [9]exprs_opt 
+[10]exprs [11]expr_semi_list 
 
 ===== Productions =====
 [0] program ::= class_list 
@@ -90,12 +90,13 @@ Warning : *** Production "exprs_opt ::= " never reduced
 [17] expr ::= OBJECTID LPAREN exprs_opt RPAREN 
 [18] expr ::= LBRACE expr_semi_list RBRACE 
 [19] expr ::= 
-[20] expr_semi_list ::= expr 
-[21] expr_semi_list ::= expr_semi_list SEMI expr SEMI 
-[22] exprs_opt ::= 
-[23] exprs_opt ::= exprs 
-[24] exprs ::= expr 
-[25] exprs ::= expr COMMA exprs 
+[20] expr_semi_list ::= expr_semi 
+[21] expr_semi_list ::= expr_semi_list expr_semi 
+[22] expr_semi ::= expr SEMI 
+[23] exprs_opt ::= 
+[24] exprs_opt ::= exprs 
+[25] exprs ::= expr 
+[26] exprs ::= expr COMMA exprs 
 
 ===== Viable Prefix Recognizer =====
 START lalr_state [0]: {
@@ -312,18 +313,20 @@ transition on LBRACE to state [28]
 
 -------------------
 lalr_state [28]: {
-  [expr ::= (*) , {SEMI RBRACE }]
-  [expr ::= (*) OBJECTID , {SEMI RBRACE }]
-  [expr_semi_list ::= (*) expr_semi_list SEMI expr SEMI , {SEMI RBRACE }]
+  [expr_semi_list ::= (*) expr_semi , {SEMI LBRACE RBRACE STR_CONST OBJECTID }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {SEMI }]
+  [expr_semi ::= (*) expr SEMI , {SEMI LBRACE RBRACE STR_CONST OBJECTID }]
+  [expr ::= (*) , {SEMI }]
+  [expr ::= (*) OBJECTID , {SEMI }]
   [expr ::= LBRACE (*) expr_semi_list RBRACE , {COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [expr ::= (*) LBRACE expr_semi_list RBRACE , {SEMI RBRACE }]
-  [expr ::= (*) STR_CONST , {SEMI RBRACE }]
-  [expr_semi_list ::= (*) expr , {SEMI RBRACE }]
-  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {SEMI RBRACE }]
+  [expr_semi_list ::= (*) expr_semi_list expr_semi , {SEMI LBRACE RBRACE STR_CONST OBJECTID }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {SEMI }]
+  [expr ::= (*) STR_CONST , {SEMI }]
 }
-transition on expr to state [42]
+transition on expr to state [43]
 transition on STR_CONST to state [30]
 transition on OBJECTID to state [29]
+transition on expr_semi to state [42]
 transition on expr_semi_list to state [41]
 transition on LBRACE to state [28]
 
@@ -359,15 +362,15 @@ lalr_state [33]: {
 -------------------
 lalr_state [34]: {
   [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {COMMA RPAREN }]
-  [exprs ::= (*) expr COMMA exprs , {RPAREN }]
-  [exprs_opt ::= (*) , {RPAREN }]
+  [exprs ::= (*) expr , {RPAREN }]
   [expr ::= (*) , {COMMA RPAREN }]
   [expr ::= (*) OBJECTID , {COMMA RPAREN }]
-  [exprs ::= (*) expr , {RPAREN }]
+  [exprs_opt ::= (*) exprs , {RPAREN }]
   [expr ::= (*) LBRACE expr_semi_list RBRACE , {COMMA RPAREN }]
   [expr ::= (*) STR_CONST , {COMMA RPAREN }]
+  [exprs ::= (*) expr COMMA exprs , {RPAREN }]
   [expr ::= OBJECTID LPAREN (*) exprs_opt RPAREN , {COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [exprs_opt ::= (*) exprs , {RPAREN }]
+  [exprs_opt ::= (*) , {RPAREN }]
 }
 transition on exprs to state [37]
 transition on expr to state [36]
@@ -384,8 +387,8 @@ transition on RPAREN to state [40]
 
 -------------------
 lalr_state [36]: {
-  [exprs ::= expr (*) , {RPAREN }]
   [exprs ::= expr (*) COMMA exprs , {RPAREN }]
+  [exprs ::= expr (*) , {RPAREN }]
 }
 transition on COMMA to state [38]
 
@@ -398,12 +401,12 @@ lalr_state [37]: {
 lalr_state [38]: {
   [expr ::= (*) , {COMMA RPAREN }]
   [expr ::= (*) OBJECTID , {COMMA RPAREN }]
-  [exprs ::= (*) expr , {RPAREN }]
+  [exprs ::= expr COMMA (*) exprs , {RPAREN }]
   [expr ::= (*) LBRACE expr_semi_list RBRACE , {COMMA RPAREN }]
   [expr ::= (*) STR_CONST , {COMMA RPAREN }]
-  [exprs ::= expr COMMA (*) exprs , {RPAREN }]
-  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {COMMA RPAREN }]
   [exprs ::= (*) expr COMMA exprs , {RPAREN }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {COMMA RPAREN }]
+  [exprs ::= (*) expr , {RPAREN }]
 }
 transition on exprs to state [39]
 transition on expr to state [36]
@@ -423,45 +426,46 @@ lalr_state [40]: {
 
 -------------------
 lalr_state [41]: {
+  [expr ::= (*) , {SEMI }]
+  [expr ::= (*) OBJECTID , {SEMI }]
+  [expr_semi_list ::= expr_semi_list (*) expr_semi , {SEMI LBRACE RBRACE STR_CONST OBJECTID }]
   [expr ::= LBRACE expr_semi_list (*) RBRACE , {COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [expr_semi_list ::= expr_semi_list (*) SEMI expr SEMI , {SEMI RBRACE }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {SEMI }]
+  [expr ::= (*) STR_CONST , {SEMI }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {SEMI }]
+  [expr_semi ::= (*) expr SEMI , {SEMI LBRACE RBRACE STR_CONST OBJECTID }]
 }
-transition on RBRACE to state [44]
-transition on SEMI to state [43]
+transition on expr to state [43]
+transition on RBRACE to state [46]
+transition on STR_CONST to state [30]
+transition on OBJECTID to state [29]
+transition on expr_semi to state [45]
+transition on LBRACE to state [28]
 
 -------------------
 lalr_state [42]: {
-  [expr_semi_list ::= expr (*) , {SEMI RBRACE }]
+  [expr_semi_list ::= expr_semi (*) , {SEMI LBRACE RBRACE STR_CONST OBJECTID }]
 }
 
 -------------------
 lalr_state [43]: {
-  [expr ::= (*) , {SEMI }]
-  [expr ::= (*) OBJECTID , {SEMI }]
-  [expr_semi_list ::= expr_semi_list SEMI (*) expr SEMI , {SEMI RBRACE }]
-  [expr ::= (*) LBRACE expr_semi_list RBRACE , {SEMI }]
-  [expr ::= (*) STR_CONST , {SEMI }]
-  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {SEMI }]
+  [expr_semi ::= expr (*) SEMI , {SEMI LBRACE RBRACE STR_CONST OBJECTID }]
 }
-transition on expr to state [45]
-transition on STR_CONST to state [30]
-transition on OBJECTID to state [29]
-transition on LBRACE to state [28]
+transition on SEMI to state [44]
 
 -------------------
 lalr_state [44]: {
-  [expr ::= LBRACE expr_semi_list RBRACE (*) , {COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr_semi ::= expr SEMI (*) , {SEMI LBRACE RBRACE STR_CONST OBJECTID }]
 }
 
 -------------------
 lalr_state [45]: {
-  [expr_semi_list ::= expr_semi_list SEMI expr (*) SEMI , {SEMI RBRACE }]
+  [expr_semi_list ::= expr_semi_list expr_semi (*) , {SEMI LBRACE RBRACE STR_CONST OBJECTID }]
 }
-transition on SEMI to state [46]
 
 -------------------
 lalr_state [46]: {
-  [expr_semi_list ::= expr_semi_list SEMI expr SEMI (*) , {SEMI RBRACE }]
+  [expr ::= LBRACE expr_semi_list RBRACE (*) , {COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
 
 -------------------
@@ -584,8 +588,7 @@ From state #27
  [term 40:SHIFT(to state 30)] [term 44:SHIFT(to state 29)]
 From state #28
  [term 33:REDUCE(with prod 19)] [term 38:SHIFT(to state 28)]
- [term 39:REDUCE(with prod 19)] [term 40:SHIFT(to state 30)]
- [term 44:SHIFT(to state 29)]
+ [term 40:SHIFT(to state 30)] [term 44:SHIFT(to state 29)]
 From state #29
  [term 32:REDUCE(with prod 16)] [term 33:REDUCE(with prod 16)]
  [term 35:SHIFT(to state 34)] [term 36:REDUCE(with prod 16)]
@@ -607,34 +610,41 @@ From state #34
 From state #35
  [term 36:SHIFT(to state 40)]
 From state #36
- [term 32:SHIFT(to state 38)] [term 36:REDUCE(with prod 24)]
+ [term 32:SHIFT(to state 38)] [term 36:REDUCE(with prod 25)]
 From state #37
- [term 36:REDUCE(with prod 23)]
+ [term 36:REDUCE(with prod 24)]
 From state #38
  [term 32:REDUCE(with prod 19)] [term 36:REDUCE(with prod 19)]
  [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 30)]
  [term 44:SHIFT(to state 29)]
 From state #39
- [term 36:REDUCE(with prod 25)]
+ [term 36:REDUCE(with prod 26)]
 From state #40
  [term 32:REDUCE(with prod 17)] [term 33:REDUCE(with prod 17)]
  [term 36:REDUCE(with prod 17)] [term 39:REDUCE(with prod 17)]
  [term 44:REDUCE(with prod 17)]
 From state #41
- [term 33:SHIFT(to state 43)] [term 39:SHIFT(to state 44)]
-From state #42
- [term 33:REDUCE(with prod 20)] [term 39:REDUCE(with prod 20)]
-From state #43
  [term 33:REDUCE(with prod 19)] [term 38:SHIFT(to state 28)]
- [term 40:SHIFT(to state 30)] [term 44:SHIFT(to state 29)]
+ [term 39:SHIFT(to state 46)] [term 40:SHIFT(to state 30)]
+ [term 44:SHIFT(to state 29)]
+From state #42
+ [term 33:REDUCE(with prod 20)] [term 38:REDUCE(with prod 20)]
+ [term 39:REDUCE(with prod 20)] [term 40:REDUCE(with prod 20)]
+ [term 44:REDUCE(with prod 20)]
+From state #43
+ [term 33:SHIFT(to state 44)]
 From state #44
+ [term 33:REDUCE(with prod 22)] [term 38:REDUCE(with prod 22)]
+ [term 39:REDUCE(with prod 22)] [term 40:REDUCE(with prod 22)]
+ [term 44:REDUCE(with prod 22)]
+From state #45
+ [term 33:REDUCE(with prod 21)] [term 38:REDUCE(with prod 21)]
+ [term 39:REDUCE(with prod 21)] [term 40:REDUCE(with prod 21)]
+ [term 44:REDUCE(with prod 21)]
+From state #46
  [term 32:REDUCE(with prod 18)] [term 33:REDUCE(with prod 18)]
  [term 36:REDUCE(with prod 18)] [term 39:REDUCE(with prod 18)]
  [term 44:REDUCE(with prod 18)]
-From state #45
- [term 33:SHIFT(to state 46)]
-From state #46
- [term 33:REDUCE(with prod 21)] [term 39:REDUCE(with prod 21)]
 From state #47
  [term 17:SHIFT(to state 48)] [term 39:REDUCE(with prod 10)]
  [term 44:REDUCE(with prod 10)]
@@ -677,12 +687,12 @@ From state #13
 From state #14
 From state #15
 From state #16
- [non term 6->state 17] [non term 7->state 19]
+ [non term 7->state 17] [non term 8->state 19]
 From state #17
 From state #18
 From state #19
 From state #20
- [non term 6->state 21] [non term 7->state 19]
+ [non term 7->state 21] [non term 8->state 19]
 From state #21
 From state #22
 From state #23
@@ -692,25 +702,25 @@ From state #26
 From state #27
  [non term 5->state 31]
 From state #28
- [non term 5->state 42] [non term 10->state 41]
+ [non term 5->state 43] [non term 6->state 42] [non term 11->state 41]
 From state #29
 From state #30
 From state #31
 From state #32
 From state #33
 From state #34
- [non term 5->state 36] [non term 8->state 35] [non term 9->state 37]
+ [non term 5->state 36] [non term 9->state 35] [non term 10->state 37]
 From state #35
 From state #36
 From state #37
 From state #38
- [non term 5->state 36] [non term 9->state 39]
+ [non term 5->state 36] [non term 10->state 39]
 From state #39
 From state #40
 From state #41
+ [non term 5->state 43] [non term 6->state 45]
 From state #42
 From state #43
- [non term 5->state 45]
 From state #44
 From state #45
 From state #46
@@ -727,7 +737,7 @@ From state #54
 -----------------------------
 ------- CUP v0.11a beta 20060608 Parser Generation Summary -------
   0 errors and 35 warnings
-  45 terminals, 11 non-terminals, and 26 productions declared, 
+  45 terminals, 12 non-terminals, and 27 productions declared, 
   producing 55 unique parse states.
   30 terminals declared but not used.
   0 non-terminals declared but not used.
