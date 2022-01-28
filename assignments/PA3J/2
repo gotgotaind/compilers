@@ -2,33 +2,26 @@
 _program
   #1
   _class
-    A
+    Main
     IO
-    "good.cl"
+    "/usr/class/compilers/examples/hello_world.cl"
     (
     #2
     _method
       main
       SELF_TYPE
-      #4
+      #3
       _dispatch
-        #4
+        #3
         _object
           self
         : _no_type
         out_string
         (
-        #4
+        #3
         _string
           "Hello, World.\n"
         : _no_type
         )
       : _no_type
-    )
-  #8
-  _class
-    BB__
-    A
-    "good.cl"
-    (
     )

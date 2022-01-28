@@ -67,7 +67,7 @@ class Flags {
     public static String in_filename = null;
 
     /** Enable parser debugging */
-    public static boolean parser_debug = true;
+    public static boolean parser_debug = false;
 
     /** Enable semantic analysis debugging */
     public static boolean semant_debug = true;
