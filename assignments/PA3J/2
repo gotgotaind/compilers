@@ -2,33 +2,57 @@
 _program
   #1
   _class
-    A
+    Main
     IO
-    "good.cl"
+    "hello_world.cl"
     (
     #2
     _method
       main
       SELF_TYPE
-      #4
-      _dispatch
+      #3
+      _block
         #4
-        _object
-          self
+        _dispatch
+          #4
+          _object
+            self
+          : _no_type
+          out_string
+          (
+          #4
+          _string
+            "Hello, World.\n"
+          : _no_type
+          )
         : _no_type
-        out_string
-        (
-        #4
-        _string
-          "Hello, World.\n"
+        #5
+        _dispatch
+          #5
+          _object
+            self
+          : _no_type
+          out_string
+          (
+          #5
+          _string
+            "\n"
+          : _no_type
+          )
         : _no_type
-        )
+        #6
+        _dispatch
+          #6
+          _object
+            self
+          : _no_type
+          out_string
+          (
+          #6
+          _string
+            "sdkk"
+          : _no_type
+          )
+        : _no_type
       : _no_type
-    )
-  #8
-  _class
-    BB__
-    A
-    "good.cl"
-    (
     )

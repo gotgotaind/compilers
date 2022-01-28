@@ -73,7 +73,7 @@ nonterminal Expression expr;
 nonterminal Formals formal_list;
 nonterminal Formal formal;
 
-nonterminal Expressions exprs_opt,exprs;
+nonterminal Expressions exprs_opt,exprs,expr_semi_list;
 
 /* Precedence declarations go here. */
 
@@ -121,7 +121,14 @@ expr
 	::= STR_CONST:s															{: RESULT = new string_const(curr_lineno(),s); :}
 	| OBJECTID:o															{: RESULT = new object(curr_lineno(),o); :}
 	| OBJECTID:o LPAREN exprs_opt:es RPAREN									{: RESULT = new dispatch(curr_lineno(),new object(curr_lineno(),AbstractTable.idtable.addString("self")),o,es); :}
+	| LBRACE expr_semi_list:esl RBRACE											{: RESULT = new block(curr_lineno(),esl); :}
 	|																		{: RESULT = (new no_expr(curr_lineno())); :}
+	;
+
+expr_semi_list
+	::=
+	expr:e							{: RESULT = new Expressions(curr_lineno()).appendElement(e); :}
+	| expr_semi_list:esl SEMI expr:e SEMI   	{: RESULT = esl.appendElement(e); :}
 	;
 
 exprs_opt
