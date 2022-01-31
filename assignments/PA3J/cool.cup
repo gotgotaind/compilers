@@ -118,11 +118,15 @@ formal
 	;
 
 expr
-	::= STR_CONST:s															{: RESULT = new string_const(curr_lineno(),s); :}
-	| OBJECTID:o															{: RESULT = new object(curr_lineno(),o); :}
+	::= expr:e DOT OBJECTID:o LPAREN exprs_opt:es RPAREN					{: RESULT = new dispatch(curr_lineno(),e,o,es); :}
 	| OBJECTID:o LPAREN exprs_opt:es RPAREN									{: RESULT = new dispatch(curr_lineno(),new object(curr_lineno(),AbstractTable.idtable.addString("self")),o,es); :}
 	| LBRACE expr_semi_list:esl RBRACE											{: RESULT = new block(curr_lineno(),esl); :}
-	|																		{: RESULT = (new no_expr(curr_lineno())); :}
+	| NEW TYPEID:t	{: RESULT = new new_(curr_lineno(),t); :}
+	| ISVOID expr:e															{: RESULT = new isvoid(curr_lineno(),e); :}
+	| LPAREN expr:e RPAREN		{: RESULT = e; :}
+	| OBJECTID:o	{: RESULT = new object(curr_lineno(),o); :}
+	| INT_CONST:i	{: RESULT = new int_const(curr_lineno(),i); :}
+	| STR_CONST:s	{: RESULT = new string_const(curr_lineno(),s); :}
 	;
 
 expr_semi_list
@@ -143,5 +147,5 @@ exprs_opt
 
 exprs
 	::= expr:e						{: RESULT = new Expressions(curr_lineno()).appendElement(e); :}	
-	| expr:e COMMA exprs:es			{: RESULT = es.appendElement(e); :}
+	| exprs:es COMMA expr:e 			{: RESULT = es.appendElement(e); :}
 	;
