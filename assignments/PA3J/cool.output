@@ -1,32 +1,37 @@
 Warning : Terminal "MULT" was declared but never used
-Warning : Terminal "POOL" was declared but never used
 Warning : Terminal "CASE" was declared but never used
 Warning : Terminal "MINUS" was declared but never used
 Warning : Terminal "NOT" was declared but never used
 Warning : Terminal "LT" was declared but never used
-Warning : Terminal "IN" was declared but never used
-Warning : Terminal "FI" was declared but never used
 Warning : Terminal "DIV" was declared but never used
-Warning : Terminal "LOOP" was declared but never used
 Warning : Terminal "PLUS" was declared but never used
 Warning : Terminal "ASSIGN" was declared but never used
-Warning : Terminal "IF" was declared but never used
 Warning : Terminal "LE" was declared but never used
 Warning : Terminal "OF" was declared but never used
 Warning : Terminal "EQ" was declared but never used
 Warning : Terminal "ERROR" was declared but never used
 Warning : Terminal "NEG" was declared but never used
-Warning : Terminal "ELSE" was declared but never used
-Warning : Terminal "WHILE" was declared but never used
 Warning : Terminal "ESAC" was declared but never used
-Warning : Terminal "LET" was declared but never used
 Warning : Terminal "LET_STMT" was declared but never used
-Warning : Terminal "THEN" was declared but never used
 Warning : Terminal "BOOL_CONST" was declared but never used
-Warning : Terminal "AT" was declared but never used
-Warning : *** Shift/Reduce conflict found in state #49
+Warning : *** Shift/Reduce conflict found in state #67
   between expr ::= ISVOID expr (*) 
   and     expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN 
+  and     expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN 
+  under symbol DOT
+  Resolved in favor of shifting.
+
+Warning : *** Shift/Reduce conflict found in state #59
+  between expr ::= LET OBJECTID COLON TYPEID IN expr (*) 
+  and     expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN 
+  and     expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN 
+  under symbol DOT
+  Resolved in favor of shifting.
+
+Warning : *** Shift/Reduce conflict found in state #66
+  between expr ::= OBJECTID DARROW expr (*) 
+  and     expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN 
+  and     expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN 
   under symbol DOT
   Resolved in favor of shifting.
 
@@ -63,22 +68,27 @@ Warning : *** Shift/Reduce conflict found in state #49
 [12] formal_list ::= formal COMMA formal_list 
 [13] formal_list ::= 
 [14] formal ::= OBJECTID COLON TYPEID 
-[15] expr ::= expr DOT OBJECTID LPAREN exprs_opt RPAREN 
-[16] expr ::= OBJECTID LPAREN exprs_opt RPAREN 
-[17] expr ::= LBRACE expr_semi_list RBRACE 
-[18] expr ::= NEW TYPEID 
-[19] expr ::= ISVOID expr 
-[20] expr ::= LPAREN expr RPAREN 
-[21] expr ::= OBJECTID 
-[22] expr ::= INT_CONST 
-[23] expr ::= STR_CONST 
-[24] expr_semi_list ::= expr_semi 
-[25] expr_semi_list ::= expr_semi_list expr_semi 
-[26] expr_semi ::= expr SEMI 
-[27] exprs_opt ::= 
-[28] exprs_opt ::= exprs 
-[29] exprs ::= expr 
-[30] exprs ::= exprs COMMA expr 
+[15] expr ::= OBJECTID DARROW expr 
+[16] expr ::= expr DOT OBJECTID LPAREN exprs_opt RPAREN 
+[17] expr ::= expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN 
+[18] expr ::= OBJECTID LPAREN exprs_opt RPAREN 
+[19] expr ::= IF expr THEN expr ELSE expr FI 
+[20] expr ::= WHILE expr LOOP expr POOL 
+[21] expr ::= LBRACE expr_semi_list RBRACE 
+[22] expr ::= LET OBJECTID COLON TYPEID IN expr 
+[23] expr ::= NEW TYPEID 
+[24] expr ::= ISVOID expr 
+[25] expr ::= LPAREN expr RPAREN 
+[26] expr ::= OBJECTID 
+[27] expr ::= INT_CONST 
+[28] expr ::= STR_CONST 
+[29] expr_semi_list ::= expr_semi 
+[30] expr_semi_list ::= expr_semi_list expr_semi 
+[31] expr_semi ::= expr SEMI 
+[32] exprs_opt ::= 
+[33] exprs_opt ::= exprs 
+[34] exprs ::= expr 
+[35] exprs ::= exprs COMMA expr 
 
 ===== Viable Prefix Recognizer =====
 START lalr_state [0]: {
@@ -102,13 +112,13 @@ lalr_state [1]: {
   [program ::= class_list (*) , {EOF }]
 }
 transition on CLASS to state [4]
-transition on class to state [67]
+transition on class to state [92]
 
 -------------------
 lalr_state [2]: {
   [$START ::= program (*) EOF , {EOF }]
 }
-transition on EOF to state [66]
+transition on EOF to state [91]
 
 -------------------
 lalr_state [3]: {
@@ -136,7 +146,7 @@ lalr_state [6]: {
   [feature_list ::= (*) , {RBRACE OBJECTID }]
   [feature_list ::= (*) feature_list feature , {RBRACE OBJECTID }]
 }
-transition on feature_list to state [63]
+transition on feature_list to state [88]
 
 -------------------
 lalr_state [7]: {
@@ -200,7 +210,7 @@ lalr_state [15]: {
   [feature ::= OBJECTID COLON (*) TYPEID , {RBRACE OBJECTID }]
   [feature ::= OBJECTID COLON (*) TYPEID DARROW expr , {RBRACE OBJECTID }]
 }
-transition on TYPEID to state [60]
+transition on TYPEID to state [85]
 
 -------------------
 lalr_state [16]: {
@@ -281,417 +291,865 @@ transition on LBRACE to state [27]
 
 -------------------
 lalr_state [27]: {
+  [expr ::= (*) WHILE expr LOOP expr POOL , {DOT RBRACE }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {DOT RBRACE }]
+  [expr ::= (*) STR_CONST , {DOT RBRACE }]
   [expr ::= (*) LPAREN expr RPAREN , {DOT RBRACE }]
-  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT RBRACE }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {DOT RBRACE }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {DOT RBRACE }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT RBRACE }]
   [expr ::= (*) INT_CONST , {DOT RBRACE }]
   [expr ::= (*) ISVOID expr , {DOT RBRACE }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT RBRACE }]
   [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {DOT RBRACE }]
+  [expr ::= (*) OBJECTID DARROW expr , {DOT RBRACE }]
+  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE (*) expr RBRACE SEMI , {RBRACE OBJECTID }]
   [expr ::= (*) OBJECTID , {DOT RBRACE }]
   [expr ::= (*) NEW TYPEID , {DOT RBRACE }]
-  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT RBRACE }]
-  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE (*) expr RBRACE SEMI , {RBRACE OBJECTID }]
-  [expr ::= (*) STR_CONST , {DOT RBRACE }]
 }
-transition on INT_CONST to state [35]
-transition on LPAREN to state [34]
-transition on expr to state [33]
-transition on ISVOID to state [32]
-transition on STR_CONST to state [31]
-transition on OBJECTID to state [30]
-transition on NEW to state [29]
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [36]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on INT_CONST to state [31]
+transition on NEW to state [30]
+transition on WHILE to state [29]
 transition on LBRACE to state [28]
 
 -------------------
 lalr_state [28]: {
+  [expr ::= (*) OBJECTID DARROW expr , {DOT SEMI }]
+  [expr ::= (*) WHILE expr LOOP expr POOL , {DOT SEMI }]
   [expr ::= (*) LPAREN expr RPAREN , {DOT SEMI }]
-  [expr ::= LBRACE (*) expr_semi_list RBRACE , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT SEMI }]
-  [expr_semi_list ::= (*) expr_semi_list expr_semi , {NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
-  [expr ::= (*) INT_CONST , {DOT SEMI }]
-  [expr ::= (*) ISVOID expr , {DOT SEMI }]
+  [expr_semi_list ::= (*) expr_semi_list expr_semi , {IF LET WHILE NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
   [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {DOT SEMI }]
-  [expr_semi_list ::= (*) expr_semi , {NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
-  [expr ::= (*) OBJECTID , {DOT SEMI }]
   [expr ::= (*) NEW TYPEID , {DOT SEMI }]
-  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT SEMI }]
-  [expr_semi ::= (*) expr SEMI , {NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
   [expr ::= (*) STR_CONST , {DOT SEMI }]
+  [expr ::= LBRACE (*) expr_semi_list RBRACE , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT SEMI }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT SEMI }]
+  [expr ::= (*) OBJECTID , {DOT SEMI }]
+  [expr_semi ::= (*) expr SEMI , {IF LET WHILE NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {DOT SEMI }]
+  [expr ::= (*) ISVOID expr , {DOT SEMI }]
+  [expr_semi_list ::= (*) expr_semi , {IF LET WHILE NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {DOT SEMI }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {DOT SEMI }]
+  [expr ::= (*) INT_CONST , {DOT SEMI }]
 }
-transition on LPAREN to state [34]
-transition on expr to state [56]
-transition on OBJECTID to state [30]
-transition on expr_semi_list to state [55]
-transition on ISVOID to state [32]
-transition on STR_CONST to state [31]
-transition on NEW to state [29]
-transition on expr_semi to state [54]
-transition on INT_CONST to state [35]
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [81]
+transition on OBJECTID to state [35]
+transition on expr_semi_list to state [80]
+transition on ISVOID to state [34]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on NEW to state [30]
+transition on expr_semi to state [79]
+transition on INT_CONST to state [31]
 transition on LBRACE to state [28]
+transition on WHILE to state [29]
 
 -------------------
 lalr_state [29]: {
-  [expr ::= NEW (*) TYPEID , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) WHILE expr LOOP expr POOL , {LOOP DOT }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {LOOP DOT }]
+  [expr ::= (*) STR_CONST , {LOOP DOT }]
+  [expr ::= (*) LPAREN expr RPAREN , {LOOP DOT }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {LOOP DOT }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {LOOP DOT }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {LOOP DOT }]
+  [expr ::= (*) INT_CONST , {LOOP DOT }]
+  [expr ::= (*) ISVOID expr , {LOOP DOT }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {LOOP DOT }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {LOOP DOT }]
+  [expr ::= (*) OBJECTID DARROW expr , {LOOP DOT }]
+  [expr ::= (*) OBJECTID , {LOOP DOT }]
+  [expr ::= (*) NEW TYPEID , {LOOP DOT }]
+  [expr ::= WHILE (*) expr LOOP expr POOL , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
-transition on TYPEID to state [53]
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [75]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on INT_CONST to state [31]
+transition on NEW to state [30]
+transition on WHILE to state [29]
+transition on LBRACE to state [28]
 
 -------------------
 lalr_state [30]: {
-  [expr ::= OBJECTID (*) LPAREN exprs_opt RPAREN , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [expr ::= OBJECTID (*) , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= NEW (*) TYPEID , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
-transition on LPAREN to state [50]
+transition on TYPEID to state [74]
 
 -------------------
 lalr_state [31]: {
-  [expr ::= STR_CONST (*) , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= INT_CONST (*) , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
 
 -------------------
 lalr_state [32]: {
-  [expr ::= (*) LPAREN expr RPAREN , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [expr ::= ISVOID (*) expr , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [expr ::= (*) INT_CONST , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [expr ::= (*) ISVOID expr , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [expr ::= (*) OBJECTID , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [expr ::= (*) NEW TYPEID , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [expr ::= (*) STR_CONST , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= STR_CONST (*) , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
-transition on INT_CONST to state [35]
-transition on LPAREN to state [34]
-transition on expr to state [49]
-transition on ISVOID to state [32]
-transition on STR_CONST to state [31]
-transition on OBJECTID to state [30]
-transition on NEW to state [29]
-transition on LBRACE to state [28]
 
 -------------------
 lalr_state [33]: {
-  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr (*) RBRACE SEMI , {RBRACE OBJECTID }]
-  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT RBRACE }]
+  [expr ::= (*) WHILE expr LOOP expr POOL , {THEN DOT }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {THEN DOT }]
+  [expr ::= (*) STR_CONST , {THEN DOT }]
+  [expr ::= (*) LPAREN expr RPAREN , {THEN DOT }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {THEN DOT }]
+  [expr ::= IF (*) expr THEN expr ELSE expr FI , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {THEN DOT }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {THEN DOT }]
+  [expr ::= (*) INT_CONST , {THEN DOT }]
+  [expr ::= (*) ISVOID expr , {THEN DOT }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {THEN DOT }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {THEN DOT }]
+  [expr ::= (*) OBJECTID DARROW expr , {THEN DOT }]
+  [expr ::= (*) OBJECTID , {THEN DOT }]
+  [expr ::= (*) NEW TYPEID , {THEN DOT }]
 }
-transition on DOT to state [38]
-transition on RBRACE to state [47]
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [68]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on INT_CONST to state [31]
+transition on NEW to state [30]
+transition on WHILE to state [29]
+transition on LBRACE to state [28]
 
 -------------------
 lalr_state [34]: {
-  [expr ::= (*) LPAREN expr RPAREN , {DOT RPAREN }]
-  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT RPAREN }]
-  [expr ::= (*) INT_CONST , {DOT RPAREN }]
-  [expr ::= (*) ISVOID expr , {DOT RPAREN }]
-  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {DOT RPAREN }]
-  [expr ::= (*) OBJECTID , {DOT RPAREN }]
-  [expr ::= (*) NEW TYPEID , {DOT RPAREN }]
-  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT RPAREN }]
-  [expr ::= (*) STR_CONST , {DOT RPAREN }]
-  [expr ::= LPAREN (*) expr RPAREN , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) WHILE expr LOOP expr POOL , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) STR_CONST , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) LPAREN expr RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) INT_CONST , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= ISVOID (*) expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) ISVOID expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) OBJECTID DARROW expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) OBJECTID , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) NEW TYPEID , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
-transition on INT_CONST to state [35]
-transition on LPAREN to state [34]
-transition on expr to state [36]
-transition on ISVOID to state [32]
-transition on STR_CONST to state [31]
-transition on OBJECTID to state [30]
-transition on NEW to state [29]
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [67]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on INT_CONST to state [31]
+transition on NEW to state [30]
+transition on WHILE to state [29]
 transition on LBRACE to state [28]
 
 -------------------
 lalr_state [35]: {
-  [expr ::= INT_CONST (*) , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= OBJECTID (*) LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= OBJECTID (*) , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= OBJECTID (*) DARROW expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
+transition on LPAREN to state [63]
+transition on DARROW to state [62]
 
 -------------------
 lalr_state [36]: {
-  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT RPAREN }]
-  [expr ::= LPAREN expr (*) RPAREN , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT RBRACE }]
+  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr (*) RBRACE SEMI , {RBRACE OBJECTID }]
+  [expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {DOT RBRACE }]
 }
-transition on DOT to state [38]
-transition on RPAREN to state [37]
+transition on DOT to state [41]
+transition on RBRACE to state [60]
 
 -------------------
 lalr_state [37]: {
-  [expr ::= LPAREN expr RPAREN (*) , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= LET (*) OBJECTID COLON TYPEID IN expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
+transition on OBJECTID to state [55]
 
 -------------------
 lalr_state [38]: {
-  [expr ::= expr DOT (*) OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) WHILE expr LOOP expr POOL , {DOT RPAREN }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {DOT RPAREN }]
+  [expr ::= LPAREN (*) expr RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) STR_CONST , {DOT RPAREN }]
+  [expr ::= (*) LPAREN expr RPAREN , {DOT RPAREN }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {DOT RPAREN }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {DOT RPAREN }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT RPAREN }]
+  [expr ::= (*) INT_CONST , {DOT RPAREN }]
+  [expr ::= (*) ISVOID expr , {DOT RPAREN }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT RPAREN }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {DOT RPAREN }]
+  [expr ::= (*) OBJECTID DARROW expr , {DOT RPAREN }]
+  [expr ::= (*) OBJECTID , {DOT RPAREN }]
+  [expr ::= (*) NEW TYPEID , {DOT RPAREN }]
 }
-transition on OBJECTID to state [39]
-
--------------------
-lalr_state [39]: {
-  [expr ::= expr DOT OBJECTID (*) LPAREN exprs_opt RPAREN , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-}
-transition on LPAREN to state [40]
-
--------------------
-lalr_state [40]: {
-  [expr ::= (*) LPAREN expr RPAREN , {DOT COMMA RPAREN }]
-  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT COMMA RPAREN }]
-  [exprs_opt ::= (*) exprs , {RPAREN }]
-  [expr ::= (*) INT_CONST , {DOT COMMA RPAREN }]
-  [expr ::= (*) ISVOID expr , {DOT COMMA RPAREN }]
-  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
-  [exprs ::= (*) exprs COMMA expr , {COMMA RPAREN }]
-  [expr ::= expr DOT OBJECTID LPAREN (*) exprs_opt RPAREN , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [exprs_opt ::= (*) , {RPAREN }]
-  [expr ::= (*) OBJECTID , {DOT COMMA RPAREN }]
-  [expr ::= (*) NEW TYPEID , {DOT COMMA RPAREN }]
-  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
-  [exprs ::= (*) expr , {COMMA RPAREN }]
-  [expr ::= (*) STR_CONST , {DOT COMMA RPAREN }]
-}
-transition on LPAREN to state [34]
-transition on expr to state [43]
-transition on OBJECTID to state [30]
-transition on ISVOID to state [32]
-transition on exprs to state [42]
-transition on STR_CONST to state [31]
-transition on exprs_opt to state [41]
-transition on NEW to state [29]
-transition on INT_CONST to state [35]
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [39]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on INT_CONST to state [31]
+transition on NEW to state [30]
+transition on WHILE to state [29]
 transition on LBRACE to state [28]
 
 -------------------
-lalr_state [41]: {
-  [expr ::= expr DOT OBJECTID LPAREN exprs_opt (*) RPAREN , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+lalr_state [39]: {
+  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT RPAREN }]
+  [expr ::= LPAREN expr (*) RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {DOT RPAREN }]
 }
-transition on RPAREN to state [46]
+transition on DOT to state [41]
+transition on RPAREN to state [40]
+
+-------------------
+lalr_state [40]: {
+  [expr ::= LPAREN expr RPAREN (*) , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+}
+
+-------------------
+lalr_state [41]: {
+  [expr ::= expr DOT (*) OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= expr DOT (*) OBJECTID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+}
+transition on OBJECTID to state [42]
 
 -------------------
 lalr_state [42]: {
-  [exprs_opt ::= exprs (*) , {RPAREN }]
-  [exprs ::= exprs (*) COMMA expr , {COMMA RPAREN }]
+  [expr ::= expr DOT OBJECTID (*) AT TYPEID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= expr DOT OBJECTID (*) LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
-transition on COMMA to state [44]
+transition on LPAREN to state [44]
+transition on AT to state [43]
 
 -------------------
 lalr_state [43]: {
-  [exprs ::= expr (*) , {COMMA RPAREN }]
-  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
+  [expr ::= expr DOT OBJECTID AT (*) TYPEID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
-transition on DOT to state [38]
+transition on TYPEID to state [51]
 
 -------------------
 lalr_state [44]: {
+  [expr ::= (*) OBJECTID DARROW expr , {DOT COMMA RPAREN }]
+  [expr ::= (*) WHILE expr LOOP expr POOL , {DOT COMMA RPAREN }]
   [expr ::= (*) LPAREN expr RPAREN , {DOT COMMA RPAREN }]
-  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT COMMA RPAREN }]
-  [expr ::= (*) INT_CONST , {DOT COMMA RPAREN }]
-  [expr ::= (*) ISVOID expr , {DOT COMMA RPAREN }]
+  [exprs ::= (*) exprs COMMA expr , {COMMA RPAREN }]
   [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
-  [exprs ::= exprs COMMA (*) expr , {COMMA RPAREN }]
-  [expr ::= (*) OBJECTID , {DOT COMMA RPAREN }]
   [expr ::= (*) NEW TYPEID , {DOT COMMA RPAREN }]
-  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
   [expr ::= (*) STR_CONST , {DOT COMMA RPAREN }]
+  [exprs_opt ::= (*) exprs , {RPAREN }]
+  [expr ::= expr DOT OBJECTID LPAREN (*) exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT COMMA RPAREN }]
+  [expr ::= (*) OBJECTID , {DOT COMMA RPAREN }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {DOT COMMA RPAREN }]
+  [expr ::= (*) ISVOID expr , {DOT COMMA RPAREN }]
+  [exprs ::= (*) expr , {COMMA RPAREN }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {DOT COMMA RPAREN }]
+  [expr ::= (*) INT_CONST , {DOT COMMA RPAREN }]
+  [exprs_opt ::= (*) , {RPAREN }]
 }
-transition on INT_CONST to state [35]
-transition on LPAREN to state [34]
-transition on expr to state [45]
-transition on ISVOID to state [32]
-transition on STR_CONST to state [31]
-transition on OBJECTID to state [30]
-transition on NEW to state [29]
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [47]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on exprs to state [46]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on exprs_opt to state [45]
+transition on NEW to state [30]
+transition on INT_CONST to state [31]
+transition on WHILE to state [29]
 transition on LBRACE to state [28]
 
 -------------------
 lalr_state [45]: {
-  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
-  [exprs ::= exprs COMMA expr (*) , {COMMA RPAREN }]
+  [expr ::= expr DOT OBJECTID LPAREN exprs_opt (*) RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
-transition on DOT to state [38]
+transition on RPAREN to state [50]
 
 -------------------
 lalr_state [46]: {
-  [expr ::= expr DOT OBJECTID LPAREN exprs_opt RPAREN (*) , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [exprs ::= exprs (*) COMMA expr , {COMMA RPAREN }]
+  [exprs_opt ::= exprs (*) , {RPAREN }]
 }
+transition on COMMA to state [48]
 
 -------------------
 lalr_state [47]: {
-  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE (*) SEMI , {RBRACE OBJECTID }]
+  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
+  [exprs ::= expr (*) , {COMMA RPAREN }]
+  [expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
 }
-transition on SEMI to state [48]
+transition on DOT to state [41]
 
 -------------------
 lalr_state [48]: {
-  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE SEMI (*) , {RBRACE OBJECTID }]
-}
-
--------------------
-lalr_state [49]: {
-  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-  [expr ::= ISVOID expr (*) , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-}
-transition on DOT to state [38]
-
--------------------
-lalr_state [50]: {
+  [expr ::= (*) WHILE expr LOOP expr POOL , {DOT COMMA RPAREN }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
+  [expr ::= (*) STR_CONST , {DOT COMMA RPAREN }]
   [expr ::= (*) LPAREN expr RPAREN , {DOT COMMA RPAREN }]
-  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT COMMA RPAREN }]
-  [exprs_opt ::= (*) exprs , {RPAREN }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {DOT COMMA RPAREN }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {DOT COMMA RPAREN }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
   [expr ::= (*) INT_CONST , {DOT COMMA RPAREN }]
-  [expr ::= OBJECTID LPAREN (*) exprs_opt RPAREN , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
   [expr ::= (*) ISVOID expr , {DOT COMMA RPAREN }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT COMMA RPAREN }]
   [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
-  [exprs ::= (*) exprs COMMA expr , {COMMA RPAREN }]
-  [exprs_opt ::= (*) , {RPAREN }]
+  [exprs ::= exprs COMMA (*) expr , {COMMA RPAREN }]
+  [expr ::= (*) OBJECTID DARROW expr , {DOT COMMA RPAREN }]
   [expr ::= (*) OBJECTID , {DOT COMMA RPAREN }]
   [expr ::= (*) NEW TYPEID , {DOT COMMA RPAREN }]
-  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
-  [exprs ::= (*) expr , {COMMA RPAREN }]
-  [expr ::= (*) STR_CONST , {DOT COMMA RPAREN }]
 }
-transition on LPAREN to state [34]
-transition on expr to state [43]
-transition on OBJECTID to state [30]
-transition on ISVOID to state [32]
-transition on exprs to state [42]
-transition on STR_CONST to state [31]
-transition on exprs_opt to state [51]
-transition on NEW to state [29]
-transition on INT_CONST to state [35]
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [49]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on INT_CONST to state [31]
+transition on NEW to state [30]
+transition on WHILE to state [29]
 transition on LBRACE to state [28]
 
 -------------------
-lalr_state [51]: {
-  [expr ::= OBJECTID LPAREN exprs_opt (*) RPAREN , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+lalr_state [49]: {
+  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
+  [expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
+  [exprs ::= exprs COMMA expr (*) , {COMMA RPAREN }]
 }
-transition on RPAREN to state [52]
+transition on DOT to state [41]
+
+-------------------
+lalr_state [50]: {
+  [expr ::= expr DOT OBJECTID LPAREN exprs_opt RPAREN (*) , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+}
+
+-------------------
+lalr_state [51]: {
+  [expr ::= expr DOT OBJECTID AT TYPEID (*) LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+}
+transition on LPAREN to state [52]
 
 -------------------
 lalr_state [52]: {
-  [expr ::= OBJECTID LPAREN exprs_opt RPAREN (*) , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) OBJECTID DARROW expr , {DOT COMMA RPAREN }]
+  [expr ::= (*) WHILE expr LOOP expr POOL , {DOT COMMA RPAREN }]
+  [expr ::= (*) LPAREN expr RPAREN , {DOT COMMA RPAREN }]
+  [exprs ::= (*) exprs COMMA expr , {COMMA RPAREN }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
+  [expr ::= (*) NEW TYPEID , {DOT COMMA RPAREN }]
+  [expr ::= (*) STR_CONST , {DOT COMMA RPAREN }]
+  [exprs_opt ::= (*) exprs , {RPAREN }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT COMMA RPAREN }]
+  [expr ::= (*) OBJECTID , {DOT COMMA RPAREN }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {DOT COMMA RPAREN }]
+  [expr ::= (*) ISVOID expr , {DOT COMMA RPAREN }]
+  [expr ::= expr DOT OBJECTID AT TYPEID LPAREN (*) exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [exprs ::= (*) expr , {COMMA RPAREN }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {DOT COMMA RPAREN }]
+  [expr ::= (*) INT_CONST , {DOT COMMA RPAREN }]
+  [exprs_opt ::= (*) , {RPAREN }]
 }
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [47]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on exprs to state [46]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on exprs_opt to state [53]
+transition on NEW to state [30]
+transition on INT_CONST to state [31]
+transition on LBRACE to state [28]
+transition on WHILE to state [29]
 
 -------------------
 lalr_state [53]: {
-  [expr ::= NEW TYPEID (*) , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= expr DOT OBJECTID AT TYPEID LPAREN exprs_opt (*) RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
+transition on RPAREN to state [54]
 
 -------------------
 lalr_state [54]: {
-  [expr_semi_list ::= expr_semi (*) , {NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
+  [expr ::= expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN (*) , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
 
 -------------------
 lalr_state [55]: {
-  [expr ::= (*) LPAREN expr RPAREN , {DOT SEMI }]
-  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT SEMI }]
-  [expr_semi_list ::= expr_semi_list (*) expr_semi , {NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
-  [expr ::= (*) INT_CONST , {DOT SEMI }]
-  [expr ::= (*) ISVOID expr , {DOT SEMI }]
-  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {DOT SEMI }]
-  [expr ::= (*) OBJECTID , {DOT SEMI }]
-  [expr ::= (*) NEW TYPEID , {DOT SEMI }]
-  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT SEMI }]
-  [expr_semi ::= (*) expr SEMI , {NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
-  [expr ::= (*) STR_CONST , {DOT SEMI }]
-  [expr ::= LBRACE expr_semi_list (*) RBRACE , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= LET OBJECTID (*) COLON TYPEID IN expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
-transition on LPAREN to state [34]
-transition on RBRACE to state [59]
-transition on expr to state [56]
-transition on OBJECTID to state [30]
-transition on ISVOID to state [32]
-transition on STR_CONST to state [31]
-transition on NEW to state [29]
-transition on expr_semi to state [58]
-transition on INT_CONST to state [35]
-transition on LBRACE to state [28]
+transition on COLON to state [56]
 
 -------------------
 lalr_state [56]: {
-  [expr_semi ::= expr (*) SEMI , {NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
-  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT SEMI }]
+  [expr ::= LET OBJECTID COLON (*) TYPEID IN expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
-transition on DOT to state [38]
-transition on SEMI to state [57]
+transition on TYPEID to state [57]
 
 -------------------
 lalr_state [57]: {
-  [expr_semi ::= expr SEMI (*) , {NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
+  [expr ::= LET OBJECTID COLON TYPEID (*) IN expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
+transition on IN to state [58]
 
 -------------------
 lalr_state [58]: {
-  [expr_semi_list ::= expr_semi_list expr_semi (*) , {NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
+  [expr ::= (*) WHILE expr LOOP expr POOL , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= LET OBJECTID COLON TYPEID IN (*) expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) STR_CONST , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) LPAREN expr RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) INT_CONST , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) ISVOID expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) OBJECTID DARROW expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) OBJECTID , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) NEW TYPEID , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
-
--------------------
-lalr_state [59]: {
-  [expr ::= LBRACE expr_semi_list RBRACE (*) , {DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
-}
-
--------------------
-lalr_state [60]: {
-  [feature ::= OBJECTID COLON TYPEID (*) , {RBRACE OBJECTID }]
-  [feature ::= OBJECTID COLON TYPEID (*) DARROW expr , {RBRACE OBJECTID }]
-}
-transition on DARROW to state [61]
-
--------------------
-lalr_state [61]: {
-  [expr ::= (*) LPAREN expr RPAREN , {DOT RBRACE OBJECTID }]
-  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT RBRACE OBJECTID }]
-  [expr ::= (*) INT_CONST , {DOT RBRACE OBJECTID }]
-  [expr ::= (*) ISVOID expr , {DOT RBRACE OBJECTID }]
-  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {DOT RBRACE OBJECTID }]
-  [feature ::= OBJECTID COLON TYPEID DARROW (*) expr , {RBRACE OBJECTID }]
-  [expr ::= (*) OBJECTID , {DOT RBRACE OBJECTID }]
-  [expr ::= (*) NEW TYPEID , {DOT RBRACE OBJECTID }]
-  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT RBRACE OBJECTID }]
-  [expr ::= (*) STR_CONST , {DOT RBRACE OBJECTID }]
-}
-transition on INT_CONST to state [35]
-transition on LPAREN to state [34]
-transition on expr to state [62]
-transition on ISVOID to state [32]
-transition on STR_CONST to state [31]
-transition on OBJECTID to state [30]
-transition on NEW to state [29]
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [59]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on INT_CONST to state [31]
+transition on NEW to state [30]
+transition on WHILE to state [29]
 transition on LBRACE to state [28]
 
 -------------------
-lalr_state [62]: {
-  [feature ::= OBJECTID COLON TYPEID DARROW expr (*) , {RBRACE OBJECTID }]
-  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT RBRACE OBJECTID }]
+lalr_state [59]: {
+  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= LET OBJECTID COLON TYPEID IN expr (*) , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
 }
-transition on DOT to state [38]
+transition on DOT to state [41]
+
+-------------------
+lalr_state [60]: {
+  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE (*) SEMI , {RBRACE OBJECTID }]
+}
+transition on SEMI to state [61]
+
+-------------------
+lalr_state [61]: {
+  [feature ::= OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE SEMI (*) , {RBRACE OBJECTID }]
+}
+
+-------------------
+lalr_state [62]: {
+  [expr ::= (*) WHILE expr LOOP expr POOL , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) STR_CONST , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) LPAREN expr RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) INT_CONST , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) ISVOID expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= OBJECTID DARROW (*) expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) OBJECTID DARROW expr , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) OBJECTID , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) NEW TYPEID , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+}
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [66]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on INT_CONST to state [31]
+transition on NEW to state [30]
+transition on WHILE to state [29]
+transition on LBRACE to state [28]
 
 -------------------
 lalr_state [63]: {
+  [expr ::= (*) OBJECTID DARROW expr , {DOT COMMA RPAREN }]
+  [expr ::= (*) WHILE expr LOOP expr POOL , {DOT COMMA RPAREN }]
+  [expr ::= (*) LPAREN expr RPAREN , {DOT COMMA RPAREN }]
+  [exprs ::= (*) exprs COMMA expr , {COMMA RPAREN }]
+  [expr ::= OBJECTID LPAREN (*) exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
+  [expr ::= (*) NEW TYPEID , {DOT COMMA RPAREN }]
+  [expr ::= (*) STR_CONST , {DOT COMMA RPAREN }]
+  [exprs_opt ::= (*) exprs , {RPAREN }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT COMMA RPAREN }]
+  [expr ::= (*) OBJECTID , {DOT COMMA RPAREN }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {DOT COMMA RPAREN }]
+  [expr ::= (*) ISVOID expr , {DOT COMMA RPAREN }]
+  [exprs ::= (*) expr , {COMMA RPAREN }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {DOT COMMA RPAREN }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {DOT COMMA RPAREN }]
+  [expr ::= (*) INT_CONST , {DOT COMMA RPAREN }]
+  [exprs_opt ::= (*) , {RPAREN }]
+}
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [47]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on exprs to state [46]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on exprs_opt to state [64]
+transition on NEW to state [30]
+transition on INT_CONST to state [31]
+transition on WHILE to state [29]
+transition on LBRACE to state [28]
+
+-------------------
+lalr_state [64]: {
+  [expr ::= OBJECTID LPAREN exprs_opt (*) RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+}
+transition on RPAREN to state [65]
+
+-------------------
+lalr_state [65]: {
+  [expr ::= OBJECTID LPAREN exprs_opt RPAREN (*) , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+}
+
+-------------------
+lalr_state [66]: {
+  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= OBJECTID DARROW expr (*) , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+}
+transition on DOT to state [41]
+
+-------------------
+lalr_state [67]: {
+  [expr ::= ISVOID expr (*) , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+}
+transition on DOT to state [41]
+
+-------------------
+lalr_state [68]: {
+  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {THEN DOT }]
+  [expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {THEN DOT }]
+  [expr ::= IF expr (*) THEN expr ELSE expr FI , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+}
+transition on DOT to state [41]
+transition on THEN to state [69]
+
+-------------------
+lalr_state [69]: {
+  [expr ::= (*) WHILE expr LOOP expr POOL , {ELSE DOT }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {ELSE DOT }]
+  [expr ::= IF expr THEN (*) expr ELSE expr FI , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) STR_CONST , {ELSE DOT }]
+  [expr ::= (*) LPAREN expr RPAREN , {ELSE DOT }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {ELSE DOT }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {ELSE DOT }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {ELSE DOT }]
+  [expr ::= (*) INT_CONST , {ELSE DOT }]
+  [expr ::= (*) ISVOID expr , {ELSE DOT }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {ELSE DOT }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {ELSE DOT }]
+  [expr ::= (*) OBJECTID DARROW expr , {ELSE DOT }]
+  [expr ::= (*) OBJECTID , {ELSE DOT }]
+  [expr ::= (*) NEW TYPEID , {ELSE DOT }]
+}
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [70]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on INT_CONST to state [31]
+transition on NEW to state [30]
+transition on WHILE to state [29]
+transition on LBRACE to state [28]
+
+-------------------
+lalr_state [70]: {
+  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {ELSE DOT }]
+  [expr ::= IF expr THEN expr (*) ELSE expr FI , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {ELSE DOT }]
+}
+transition on DOT to state [41]
+transition on ELSE to state [71]
+
+-------------------
+lalr_state [71]: {
+  [expr ::= (*) WHILE expr LOOP expr POOL , {FI DOT }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {FI DOT }]
+  [expr ::= IF expr THEN expr ELSE (*) expr FI , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) STR_CONST , {FI DOT }]
+  [expr ::= (*) LPAREN expr RPAREN , {FI DOT }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {FI DOT }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {FI DOT }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {FI DOT }]
+  [expr ::= (*) INT_CONST , {FI DOT }]
+  [expr ::= (*) ISVOID expr , {FI DOT }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {FI DOT }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {FI DOT }]
+  [expr ::= (*) OBJECTID DARROW expr , {FI DOT }]
+  [expr ::= (*) OBJECTID , {FI DOT }]
+  [expr ::= (*) NEW TYPEID , {FI DOT }]
+}
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [72]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on INT_CONST to state [31]
+transition on NEW to state [30]
+transition on WHILE to state [29]
+transition on LBRACE to state [28]
+
+-------------------
+lalr_state [72]: {
+  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {FI DOT }]
+  [expr ::= IF expr THEN expr ELSE expr (*) FI , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {FI DOT }]
+}
+transition on DOT to state [41]
+transition on FI to state [73]
+
+-------------------
+lalr_state [73]: {
+  [expr ::= IF expr THEN expr ELSE expr FI (*) , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+}
+
+-------------------
+lalr_state [74]: {
+  [expr ::= NEW TYPEID (*) , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+}
+
+-------------------
+lalr_state [75]: {
+  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {LOOP DOT }]
+  [expr ::= WHILE expr (*) LOOP expr POOL , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {LOOP DOT }]
+}
+transition on DOT to state [41]
+transition on LOOP to state [76]
+
+-------------------
+lalr_state [76]: {
+  [expr ::= (*) WHILE expr LOOP expr POOL , {POOL DOT }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {POOL DOT }]
+  [expr ::= (*) STR_CONST , {POOL DOT }]
+  [expr ::= (*) LPAREN expr RPAREN , {POOL DOT }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {POOL DOT }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {POOL DOT }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {POOL DOT }]
+  [expr ::= (*) INT_CONST , {POOL DOT }]
+  [expr ::= (*) ISVOID expr , {POOL DOT }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {POOL DOT }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {POOL DOT }]
+  [expr ::= (*) OBJECTID DARROW expr , {POOL DOT }]
+  [expr ::= WHILE expr LOOP (*) expr POOL , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) OBJECTID , {POOL DOT }]
+  [expr ::= (*) NEW TYPEID , {POOL DOT }]
+}
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [77]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on INT_CONST to state [31]
+transition on NEW to state [30]
+transition on WHILE to state [29]
+transition on LBRACE to state [28]
+
+-------------------
+lalr_state [77]: {
+  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {POOL DOT }]
+  [expr ::= WHILE expr LOOP expr (*) POOL , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {POOL DOT }]
+}
+transition on DOT to state [41]
+transition on POOL to state [78]
+
+-------------------
+lalr_state [78]: {
+  [expr ::= WHILE expr LOOP expr POOL (*) , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+}
+
+-------------------
+lalr_state [79]: {
+  [expr_semi_list ::= expr_semi (*) , {IF LET WHILE NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
+}
+
+-------------------
+lalr_state [80]: {
+  [expr ::= (*) WHILE expr LOOP expr POOL , {DOT SEMI }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {DOT SEMI }]
+  [expr_semi ::= (*) expr SEMI , {IF LET WHILE NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
+  [expr ::= (*) STR_CONST , {DOT SEMI }]
+  [expr ::= (*) LPAREN expr RPAREN , {DOT SEMI }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {DOT SEMI }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {DOT SEMI }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT SEMI }]
+  [expr_semi_list ::= expr_semi_list (*) expr_semi , {IF LET WHILE NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
+  [expr ::= (*) INT_CONST , {DOT SEMI }]
+  [expr ::= LBRACE expr_semi_list (*) RBRACE , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+  [expr ::= (*) ISVOID expr , {DOT SEMI }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT SEMI }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {DOT SEMI }]
+  [expr ::= (*) OBJECTID DARROW expr , {DOT SEMI }]
+  [expr ::= (*) OBJECTID , {DOT SEMI }]
+  [expr ::= (*) NEW TYPEID , {DOT SEMI }]
+}
+transition on LPAREN to state [38]
+transition on RBRACE to state [84]
+transition on LET to state [37]
+transition on expr to state [81]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on expr_semi to state [83]
+transition on INT_CONST to state [31]
+transition on NEW to state [30]
+transition on WHILE to state [29]
+transition on LBRACE to state [28]
+
+-------------------
+lalr_state [81]: {
+  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT SEMI }]
+  [expr_semi ::= expr (*) SEMI , {IF LET WHILE NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
+  [expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {DOT SEMI }]
+}
+transition on DOT to state [41]
+transition on SEMI to state [82]
+
+-------------------
+lalr_state [82]: {
+  [expr_semi ::= expr SEMI (*) , {IF LET WHILE NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
+}
+
+-------------------
+lalr_state [83]: {
+  [expr_semi_list ::= expr_semi_list expr_semi (*) , {IF LET WHILE NEW ISVOID LPAREN LBRACE RBRACE STR_CONST INT_CONST OBJECTID }]
+}
+
+-------------------
+lalr_state [84]: {
+  [expr ::= LBRACE expr_semi_list RBRACE (*) , {ELSE FI LOOP POOL THEN DOT COMMA SEMI RPAREN RBRACE OBJECTID }]
+}
+
+-------------------
+lalr_state [85]: {
+  [feature ::= OBJECTID COLON TYPEID (*) , {RBRACE OBJECTID }]
+  [feature ::= OBJECTID COLON TYPEID (*) DARROW expr , {RBRACE OBJECTID }]
+}
+transition on DARROW to state [86]
+
+-------------------
+lalr_state [86]: {
+  [expr ::= (*) WHILE expr LOOP expr POOL , {DOT RBRACE OBJECTID }]
+  [expr ::= (*) expr DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {DOT RBRACE OBJECTID }]
+  [expr ::= (*) STR_CONST , {DOT RBRACE OBJECTID }]
+  [expr ::= (*) LPAREN expr RPAREN , {DOT RBRACE OBJECTID }]
+  [expr ::= (*) LET OBJECTID COLON TYPEID IN expr , {DOT RBRACE OBJECTID }]
+  [expr ::= (*) IF expr THEN expr ELSE expr FI , {DOT RBRACE OBJECTID }]
+  [expr ::= (*) expr DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT RBRACE OBJECTID }]
+  [expr ::= (*) INT_CONST , {DOT RBRACE OBJECTID }]
+  [expr ::= (*) ISVOID expr , {DOT RBRACE OBJECTID }]
+  [feature ::= OBJECTID COLON TYPEID DARROW (*) expr , {RBRACE OBJECTID }]
+  [expr ::= (*) LBRACE expr_semi_list RBRACE , {DOT RBRACE OBJECTID }]
+  [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {DOT RBRACE OBJECTID }]
+  [expr ::= (*) OBJECTID DARROW expr , {DOT RBRACE OBJECTID }]
+  [expr ::= (*) OBJECTID , {DOT RBRACE OBJECTID }]
+  [expr ::= (*) NEW TYPEID , {DOT RBRACE OBJECTID }]
+}
+transition on LPAREN to state [38]
+transition on LET to state [37]
+transition on expr to state [87]
+transition on OBJECTID to state [35]
+transition on ISVOID to state [34]
+transition on IF to state [33]
+transition on STR_CONST to state [32]
+transition on INT_CONST to state [31]
+transition on NEW to state [30]
+transition on WHILE to state [29]
+transition on LBRACE to state [28]
+
+-------------------
+lalr_state [87]: {
+  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {DOT RBRACE OBJECTID }]
+  [feature ::= OBJECTID COLON TYPEID DARROW expr (*) , {RBRACE OBJECTID }]
+  [expr ::= expr (*) DOT OBJECTID AT TYPEID LPAREN exprs_opt RPAREN , {DOT RBRACE OBJECTID }]
+}
+transition on DOT to state [41]
+
+-------------------
+lalr_state [88]: {
   [feature ::= (*) OBJECTID LPAREN formal_list RPAREN COLON TYPEID LBRACE expr RBRACE SEMI , {RBRACE OBJECTID }]
   [class ::= CLASS TYPEID LBRACE feature_list (*) RBRACE SEMI , {EOF CLASS }]
   [feature ::= (*) OBJECTID COLON TYPEID , {RBRACE OBJECTID }]
   [feature ::= (*) OBJECTID COLON TYPEID DARROW expr , {RBRACE OBJECTID }]
   [feature_list ::= feature_list (*) feature , {RBRACE OBJECTID }]
 }
-transition on RBRACE to state [64]
+transition on RBRACE to state [89]
 transition on OBJECTID to state [12]
 transition on feature to state [11]
 
 -------------------
-lalr_state [64]: {
+lalr_state [89]: {
   [class ::= CLASS TYPEID LBRACE feature_list RBRACE (*) SEMI , {EOF CLASS }]
 }
-transition on SEMI to state [65]
+transition on SEMI to state [90]
 
 -------------------
-lalr_state [65]: {
+lalr_state [90]: {
   [class ::= CLASS TYPEID LBRACE feature_list RBRACE SEMI (*) , {EOF CLASS }]
 }
 
 -------------------
-lalr_state [66]: {
+lalr_state [91]: {
   [$START ::= program EOF (*) , {EOF }]
 }
 
 -------------------
-lalr_state [67]: {
+lalr_state [92]: {
   [class_list ::= class_list class (*) , {EOF CLASS }]
 }
 
@@ -702,7 +1160,7 @@ From state #0
 From state #1
  [term 0:REDUCE(with prod 0)] [term 2:SHIFT(to state 4)]
 From state #2
- [term 0:SHIFT(to state 66)]
+ [term 0:SHIFT(to state 91)]
 From state #3
  [term 0:REDUCE(with prod 2)] [term 2:REDUCE(with prod 2)]
 From state #4
@@ -728,7 +1186,7 @@ From state #13
 From state #14
  [term 0:REDUCE(with prod 5)] [term 2:REDUCE(with prod 5)]
 From state #15
- [term 43:SHIFT(to state 60)]
+ [term 43:SHIFT(to state 85)]
 From state #16
  [term 36:REDUCE(with prod 13)] [term 44:SHIFT(to state 18)]
 From state #17
@@ -752,158 +1210,311 @@ From state #25
 From state #26
  [term 38:SHIFT(to state 27)]
 From state #27
- [term 18:SHIFT(to state 29)] [term 19:SHIFT(to state 32)]
- [term 35:SHIFT(to state 34)] [term 38:SHIFT(to state 28)]
- [term 40:SHIFT(to state 31)] [term 41:SHIFT(to state 35)]
- [term 44:SHIFT(to state 30)]
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 32)]
+ [term 41:SHIFT(to state 31)] [term 44:SHIFT(to state 35)]
 From state #28
- [term 18:SHIFT(to state 29)] [term 19:SHIFT(to state 32)]
- [term 35:SHIFT(to state 34)] [term 38:SHIFT(to state 28)]
- [term 40:SHIFT(to state 31)] [term 41:SHIFT(to state 35)]
- [term 44:SHIFT(to state 30)]
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 32)]
+ [term 41:SHIFT(to state 31)] [term 44:SHIFT(to state 35)]
 From state #29
- [term 43:SHIFT(to state 53)]
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 32)]
+ [term 41:SHIFT(to state 31)] [term 44:SHIFT(to state 35)]
 From state #30
- [term 30:REDUCE(with prod 21)] [term 32:REDUCE(with prod 21)]
- [term 33:REDUCE(with prod 21)] [term 35:SHIFT(to state 50)]
+ [term 43:SHIFT(to state 74)]
+From state #31
+ [term 3:REDUCE(with prod 27)] [term 4:REDUCE(with prod 27)]
+ [term 10:REDUCE(with prod 27)] [term 11:REDUCE(with prod 27)]
+ [term 12:REDUCE(with prod 27)] [term 30:REDUCE(with prod 27)]
+ [term 32:REDUCE(with prod 27)] [term 33:REDUCE(with prod 27)]
+ [term 36:REDUCE(with prod 27)] [term 39:REDUCE(with prod 27)]
+ [term 44:REDUCE(with prod 27)]
+From state #32
+ [term 3:REDUCE(with prod 28)] [term 4:REDUCE(with prod 28)]
+ [term 10:REDUCE(with prod 28)] [term 11:REDUCE(with prod 28)]
+ [term 12:REDUCE(with prod 28)] [term 30:REDUCE(with prod 28)]
+ [term 32:REDUCE(with prod 28)] [term 33:REDUCE(with prod 28)]
+ [term 36:REDUCE(with prod 28)] [term 39:REDUCE(with prod 28)]
+ [term 44:REDUCE(with prod 28)]
+From state #33
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 32)]
+ [term 41:SHIFT(to state 31)] [term 44:SHIFT(to state 35)]
+From state #34
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 32)]
+ [term 41:SHIFT(to state 31)] [term 44:SHIFT(to state 35)]
+From state #35
+ [term 3:REDUCE(with prod 26)] [term 4:REDUCE(with prod 26)]
+ [term 10:REDUCE(with prod 26)] [term 11:REDUCE(with prod 26)]
+ [term 12:REDUCE(with prod 26)] [term 17:SHIFT(to state 62)]
+ [term 30:REDUCE(with prod 26)] [term 32:REDUCE(with prod 26)]
+ [term 33:REDUCE(with prod 26)] [term 35:SHIFT(to state 63)]
+ [term 36:REDUCE(with prod 26)] [term 39:REDUCE(with prod 26)]
+ [term 44:REDUCE(with prod 26)]
+From state #36
+ [term 30:SHIFT(to state 41)] [term 39:SHIFT(to state 60)]
+From state #37
+ [term 44:SHIFT(to state 55)]
+From state #38
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 32)]
+ [term 41:SHIFT(to state 31)] [term 44:SHIFT(to state 35)]
+From state #39
+ [term 30:SHIFT(to state 41)] [term 36:SHIFT(to state 40)]
+From state #40
+ [term 3:REDUCE(with prod 25)] [term 4:REDUCE(with prod 25)]
+ [term 10:REDUCE(with prod 25)] [term 11:REDUCE(with prod 25)]
+ [term 12:REDUCE(with prod 25)] [term 30:REDUCE(with prod 25)]
+ [term 32:REDUCE(with prod 25)] [term 33:REDUCE(with prod 25)]
+ [term 36:REDUCE(with prod 25)] [term 39:REDUCE(with prod 25)]
+ [term 44:REDUCE(with prod 25)]
+From state #41
+ [term 44:SHIFT(to state 42)]
+From state #42
+ [term 35:SHIFT(to state 44)] [term 37:SHIFT(to state 43)]
+From state #43
+ [term 43:SHIFT(to state 51)]
+From state #44
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 36:REDUCE(with prod 32)] [term 38:SHIFT(to state 28)]
+ [term 40:SHIFT(to state 32)] [term 41:SHIFT(to state 31)]
+ [term 44:SHIFT(to state 35)]
+From state #45
+ [term 36:SHIFT(to state 50)]
+From state #46
+ [term 32:SHIFT(to state 48)] [term 36:REDUCE(with prod 33)]
+From state #47
+ [term 30:SHIFT(to state 41)] [term 32:REDUCE(with prod 34)]
+ [term 36:REDUCE(with prod 34)]
+From state #48
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 32)]
+ [term 41:SHIFT(to state 31)] [term 44:SHIFT(to state 35)]
+From state #49
+ [term 30:SHIFT(to state 41)] [term 32:REDUCE(with prod 35)]
+ [term 36:REDUCE(with prod 35)]
+From state #50
+ [term 3:REDUCE(with prod 16)] [term 4:REDUCE(with prod 16)]
+ [term 10:REDUCE(with prod 16)] [term 11:REDUCE(with prod 16)]
+ [term 12:REDUCE(with prod 16)] [term 30:REDUCE(with prod 16)]
+ [term 32:REDUCE(with prod 16)] [term 33:REDUCE(with prod 16)]
+ [term 36:REDUCE(with prod 16)] [term 39:REDUCE(with prod 16)]
+ [term 44:REDUCE(with prod 16)]
+From state #51
+ [term 35:SHIFT(to state 52)]
+From state #52
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 36:REDUCE(with prod 32)] [term 38:SHIFT(to state 28)]
+ [term 40:SHIFT(to state 32)] [term 41:SHIFT(to state 31)]
+ [term 44:SHIFT(to state 35)]
+From state #53
+ [term 36:SHIFT(to state 54)]
+From state #54
+ [term 3:REDUCE(with prod 17)] [term 4:REDUCE(with prod 17)]
+ [term 10:REDUCE(with prod 17)] [term 11:REDUCE(with prod 17)]
+ [term 12:REDUCE(with prod 17)] [term 30:REDUCE(with prod 17)]
+ [term 32:REDUCE(with prod 17)] [term 33:REDUCE(with prod 17)]
+ [term 36:REDUCE(with prod 17)] [term 39:REDUCE(with prod 17)]
+ [term 44:REDUCE(with prod 17)]
+From state #55
+ [term 34:SHIFT(to state 56)]
+From state #56
+ [term 43:SHIFT(to state 57)]
+From state #57
+ [term 6:SHIFT(to state 58)]
+From state #58
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 32)]
+ [term 41:SHIFT(to state 31)] [term 44:SHIFT(to state 35)]
+From state #59
+ [term 3:REDUCE(with prod 22)] [term 4:REDUCE(with prod 22)]
+ [term 10:REDUCE(with prod 22)] [term 11:REDUCE(with prod 22)]
+ [term 12:REDUCE(with prod 22)] [term 30:SHIFT(to state 41)]
+ [term 32:REDUCE(with prod 22)] [term 33:REDUCE(with prod 22)]
+ [term 36:REDUCE(with prod 22)] [term 39:REDUCE(with prod 22)]
+ [term 44:REDUCE(with prod 22)]
+From state #60
+ [term 33:SHIFT(to state 61)]
+From state #61
+ [term 39:REDUCE(with prod 8)] [term 44:REDUCE(with prod 8)]
+From state #62
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 32)]
+ [term 41:SHIFT(to state 31)] [term 44:SHIFT(to state 35)]
+From state #63
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 36:REDUCE(with prod 32)] [term 38:SHIFT(to state 28)]
+ [term 40:SHIFT(to state 32)] [term 41:SHIFT(to state 31)]
+ [term 44:SHIFT(to state 35)]
+From state #64
+ [term 36:SHIFT(to state 65)]
+From state #65
+ [term 3:REDUCE(with prod 18)] [term 4:REDUCE(with prod 18)]
+ [term 10:REDUCE(with prod 18)] [term 11:REDUCE(with prod 18)]
+ [term 12:REDUCE(with prod 18)] [term 30:REDUCE(with prod 18)]
+ [term 32:REDUCE(with prod 18)] [term 33:REDUCE(with prod 18)]
+ [term 36:REDUCE(with prod 18)] [term 39:REDUCE(with prod 18)]
+ [term 44:REDUCE(with prod 18)]
+From state #66
+ [term 3:REDUCE(with prod 15)] [term 4:REDUCE(with prod 15)]
+ [term 10:REDUCE(with prod 15)] [term 11:REDUCE(with prod 15)]
+ [term 12:REDUCE(with prod 15)] [term 30:SHIFT(to state 41)]
+ [term 32:REDUCE(with prod 15)] [term 33:REDUCE(with prod 15)]
+ [term 36:REDUCE(with prod 15)] [term 39:REDUCE(with prod 15)]
+ [term 44:REDUCE(with prod 15)]
+From state #67
+ [term 3:REDUCE(with prod 24)] [term 4:REDUCE(with prod 24)]
+ [term 10:REDUCE(with prod 24)] [term 11:REDUCE(with prod 24)]
+ [term 12:REDUCE(with prod 24)] [term 30:SHIFT(to state 41)]
+ [term 32:REDUCE(with prod 24)] [term 33:REDUCE(with prod 24)]
+ [term 36:REDUCE(with prod 24)] [term 39:REDUCE(with prod 24)]
+ [term 44:REDUCE(with prod 24)]
+From state #68
+ [term 12:SHIFT(to state 69)] [term 30:SHIFT(to state 41)]
+From state #69
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 32)]
+ [term 41:SHIFT(to state 31)] [term 44:SHIFT(to state 35)]
+From state #70
+ [term 3:SHIFT(to state 71)] [term 30:SHIFT(to state 41)]
+From state #71
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 32)]
+ [term 41:SHIFT(to state 31)] [term 44:SHIFT(to state 35)]
+From state #72
+ [term 4:SHIFT(to state 73)] [term 30:SHIFT(to state 41)]
+From state #73
+ [term 3:REDUCE(with prod 19)] [term 4:REDUCE(with prod 19)]
+ [term 10:REDUCE(with prod 19)] [term 11:REDUCE(with prod 19)]
+ [term 12:REDUCE(with prod 19)] [term 30:REDUCE(with prod 19)]
+ [term 32:REDUCE(with prod 19)] [term 33:REDUCE(with prod 19)]
+ [term 36:REDUCE(with prod 19)] [term 39:REDUCE(with prod 19)]
+ [term 44:REDUCE(with prod 19)]
+From state #74
+ [term 3:REDUCE(with prod 23)] [term 4:REDUCE(with prod 23)]
+ [term 10:REDUCE(with prod 23)] [term 11:REDUCE(with prod 23)]
+ [term 12:REDUCE(with prod 23)] [term 30:REDUCE(with prod 23)]
+ [term 32:REDUCE(with prod 23)] [term 33:REDUCE(with prod 23)]
+ [term 36:REDUCE(with prod 23)] [term 39:REDUCE(with prod 23)]
+ [term 44:REDUCE(with prod 23)]
+From state #75
+ [term 10:SHIFT(to state 76)] [term 30:SHIFT(to state 41)]
+From state #76
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 32)]
+ [term 41:SHIFT(to state 31)] [term 44:SHIFT(to state 35)]
+From state #77
+ [term 11:SHIFT(to state 78)] [term 30:SHIFT(to state 41)]
+From state #78
+ [term 3:REDUCE(with prod 20)] [term 4:REDUCE(with prod 20)]
+ [term 10:REDUCE(with prod 20)] [term 11:REDUCE(with prod 20)]
+ [term 12:REDUCE(with prod 20)] [term 30:REDUCE(with prod 20)]
+ [term 32:REDUCE(with prod 20)] [term 33:REDUCE(with prod 20)]
+ [term 36:REDUCE(with prod 20)] [term 39:REDUCE(with prod 20)]
+ [term 44:REDUCE(with prod 20)]
+From state #79
+ [term 5:REDUCE(with prod 29)] [term 8:REDUCE(with prod 29)]
+ [term 13:REDUCE(with prod 29)] [term 18:REDUCE(with prod 29)]
+ [term 19:REDUCE(with prod 29)] [term 35:REDUCE(with prod 29)]
+ [term 38:REDUCE(with prod 29)] [term 39:REDUCE(with prod 29)]
+ [term 40:REDUCE(with prod 29)] [term 41:REDUCE(with prod 29)]
+ [term 44:REDUCE(with prod 29)]
+From state #80
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 38:SHIFT(to state 28)] [term 39:SHIFT(to state 84)]
+ [term 40:SHIFT(to state 32)] [term 41:SHIFT(to state 31)]
+ [term 44:SHIFT(to state 35)]
+From state #81
+ [term 30:SHIFT(to state 41)] [term 33:SHIFT(to state 82)]
+From state #82
+ [term 5:REDUCE(with prod 31)] [term 8:REDUCE(with prod 31)]
+ [term 13:REDUCE(with prod 31)] [term 18:REDUCE(with prod 31)]
+ [term 19:REDUCE(with prod 31)] [term 35:REDUCE(with prod 31)]
+ [term 38:REDUCE(with prod 31)] [term 39:REDUCE(with prod 31)]
+ [term 40:REDUCE(with prod 31)] [term 41:REDUCE(with prod 31)]
+ [term 44:REDUCE(with prod 31)]
+From state #83
+ [term 5:REDUCE(with prod 30)] [term 8:REDUCE(with prod 30)]
+ [term 13:REDUCE(with prod 30)] [term 18:REDUCE(with prod 30)]
+ [term 19:REDUCE(with prod 30)] [term 35:REDUCE(with prod 30)]
+ [term 38:REDUCE(with prod 30)] [term 39:REDUCE(with prod 30)]
+ [term 40:REDUCE(with prod 30)] [term 41:REDUCE(with prod 30)]
+ [term 44:REDUCE(with prod 30)]
+From state #84
+ [term 3:REDUCE(with prod 21)] [term 4:REDUCE(with prod 21)]
+ [term 10:REDUCE(with prod 21)] [term 11:REDUCE(with prod 21)]
+ [term 12:REDUCE(with prod 21)] [term 30:REDUCE(with prod 21)]
+ [term 32:REDUCE(with prod 21)] [term 33:REDUCE(with prod 21)]
  [term 36:REDUCE(with prod 21)] [term 39:REDUCE(with prod 21)]
  [term 44:REDUCE(with prod 21)]
-From state #31
- [term 30:REDUCE(with prod 23)] [term 32:REDUCE(with prod 23)]
- [term 33:REDUCE(with prod 23)] [term 36:REDUCE(with prod 23)]
- [term 39:REDUCE(with prod 23)] [term 44:REDUCE(with prod 23)]
-From state #32
- [term 18:SHIFT(to state 29)] [term 19:SHIFT(to state 32)]
- [term 35:SHIFT(to state 34)] [term 38:SHIFT(to state 28)]
- [term 40:SHIFT(to state 31)] [term 41:SHIFT(to state 35)]
- [term 44:SHIFT(to state 30)]
-From state #33
- [term 30:SHIFT(to state 38)] [term 39:SHIFT(to state 47)]
-From state #34
- [term 18:SHIFT(to state 29)] [term 19:SHIFT(to state 32)]
- [term 35:SHIFT(to state 34)] [term 38:SHIFT(to state 28)]
- [term 40:SHIFT(to state 31)] [term 41:SHIFT(to state 35)]
- [term 44:SHIFT(to state 30)]
-From state #35
- [term 30:REDUCE(with prod 22)] [term 32:REDUCE(with prod 22)]
- [term 33:REDUCE(with prod 22)] [term 36:REDUCE(with prod 22)]
- [term 39:REDUCE(with prod 22)] [term 44:REDUCE(with prod 22)]
-From state #36
- [term 30:SHIFT(to state 38)] [term 36:SHIFT(to state 37)]
-From state #37
- [term 30:REDUCE(with prod 20)] [term 32:REDUCE(with prod 20)]
- [term 33:REDUCE(with prod 20)] [term 36:REDUCE(with prod 20)]
- [term 39:REDUCE(with prod 20)] [term 44:REDUCE(with prod 20)]
-From state #38
- [term 44:SHIFT(to state 39)]
-From state #39
- [term 35:SHIFT(to state 40)]
-From state #40
- [term 18:SHIFT(to state 29)] [term 19:SHIFT(to state 32)]
- [term 35:SHIFT(to state 34)] [term 36:REDUCE(with prod 27)]
- [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 31)]
- [term 41:SHIFT(to state 35)] [term 44:SHIFT(to state 30)]
-From state #41
- [term 36:SHIFT(to state 46)]
-From state #42
- [term 32:SHIFT(to state 44)] [term 36:REDUCE(with prod 28)]
-From state #43
- [term 30:SHIFT(to state 38)] [term 32:REDUCE(with prod 29)]
- [term 36:REDUCE(with prod 29)]
-From state #44
- [term 18:SHIFT(to state 29)] [term 19:SHIFT(to state 32)]
- [term 35:SHIFT(to state 34)] [term 38:SHIFT(to state 28)]
- [term 40:SHIFT(to state 31)] [term 41:SHIFT(to state 35)]
- [term 44:SHIFT(to state 30)]
-From state #45
- [term 30:SHIFT(to state 38)] [term 32:REDUCE(with prod 30)]
- [term 36:REDUCE(with prod 30)]
-From state #46
- [term 30:REDUCE(with prod 15)] [term 32:REDUCE(with prod 15)]
- [term 33:REDUCE(with prod 15)] [term 36:REDUCE(with prod 15)]
- [term 39:REDUCE(with prod 15)] [term 44:REDUCE(with prod 15)]
-From state #47
- [term 33:SHIFT(to state 48)]
-From state #48
- [term 39:REDUCE(with prod 8)] [term 44:REDUCE(with prod 8)]
-From state #49
- [term 30:SHIFT(to state 38)] [term 32:REDUCE(with prod 19)]
- [term 33:REDUCE(with prod 19)] [term 36:REDUCE(with prod 19)]
- [term 39:REDUCE(with prod 19)] [term 44:REDUCE(with prod 19)]
-From state #50
- [term 18:SHIFT(to state 29)] [term 19:SHIFT(to state 32)]
- [term 35:SHIFT(to state 34)] [term 36:REDUCE(with prod 27)]
- [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 31)]
- [term 41:SHIFT(to state 35)] [term 44:SHIFT(to state 30)]
-From state #51
- [term 36:SHIFT(to state 52)]
-From state #52
- [term 30:REDUCE(with prod 16)] [term 32:REDUCE(with prod 16)]
- [term 33:REDUCE(with prod 16)] [term 36:REDUCE(with prod 16)]
- [term 39:REDUCE(with prod 16)] [term 44:REDUCE(with prod 16)]
-From state #53
- [term 30:REDUCE(with prod 18)] [term 32:REDUCE(with prod 18)]
- [term 33:REDUCE(with prod 18)] [term 36:REDUCE(with prod 18)]
- [term 39:REDUCE(with prod 18)] [term 44:REDUCE(with prod 18)]
-From state #54
- [term 18:REDUCE(with prod 24)] [term 19:REDUCE(with prod 24)]
- [term 35:REDUCE(with prod 24)] [term 38:REDUCE(with prod 24)]
- [term 39:REDUCE(with prod 24)] [term 40:REDUCE(with prod 24)]
- [term 41:REDUCE(with prod 24)] [term 44:REDUCE(with prod 24)]
-From state #55
- [term 18:SHIFT(to state 29)] [term 19:SHIFT(to state 32)]
- [term 35:SHIFT(to state 34)] [term 38:SHIFT(to state 28)]
- [term 39:SHIFT(to state 59)] [term 40:SHIFT(to state 31)]
- [term 41:SHIFT(to state 35)] [term 44:SHIFT(to state 30)]
-From state #56
- [term 30:SHIFT(to state 38)] [term 33:SHIFT(to state 57)]
-From state #57
- [term 18:REDUCE(with prod 26)] [term 19:REDUCE(with prod 26)]
- [term 35:REDUCE(with prod 26)] [term 38:REDUCE(with prod 26)]
- [term 39:REDUCE(with prod 26)] [term 40:REDUCE(with prod 26)]
- [term 41:REDUCE(with prod 26)] [term 44:REDUCE(with prod 26)]
-From state #58
- [term 18:REDUCE(with prod 25)] [term 19:REDUCE(with prod 25)]
- [term 35:REDUCE(with prod 25)] [term 38:REDUCE(with prod 25)]
- [term 39:REDUCE(with prod 25)] [term 40:REDUCE(with prod 25)]
- [term 41:REDUCE(with prod 25)] [term 44:REDUCE(with prod 25)]
-From state #59
- [term 30:REDUCE(with prod 17)] [term 32:REDUCE(with prod 17)]
- [term 33:REDUCE(with prod 17)] [term 36:REDUCE(with prod 17)]
- [term 39:REDUCE(with prod 17)] [term 44:REDUCE(with prod 17)]
-From state #60
- [term 17:SHIFT(to state 61)] [term 39:REDUCE(with prod 10)]
+From state #85
+ [term 17:SHIFT(to state 86)] [term 39:REDUCE(with prod 10)]
  [term 44:REDUCE(with prod 10)]
-From state #61
- [term 18:SHIFT(to state 29)] [term 19:SHIFT(to state 32)]
- [term 35:SHIFT(to state 34)] [term 38:SHIFT(to state 28)]
- [term 40:SHIFT(to state 31)] [term 41:SHIFT(to state 35)]
- [term 44:SHIFT(to state 30)]
-From state #62
- [term 30:SHIFT(to state 38)] [term 39:REDUCE(with prod 9)]
+From state #86
+ [term 5:SHIFT(to state 33)] [term 8:SHIFT(to state 37)]
+ [term 13:SHIFT(to state 29)] [term 18:SHIFT(to state 30)]
+ [term 19:SHIFT(to state 34)] [term 35:SHIFT(to state 38)]
+ [term 38:SHIFT(to state 28)] [term 40:SHIFT(to state 32)]
+ [term 41:SHIFT(to state 31)] [term 44:SHIFT(to state 35)]
+From state #87
+ [term 30:SHIFT(to state 41)] [term 39:REDUCE(with prod 9)]
  [term 44:REDUCE(with prod 9)]
-From state #63
- [term 39:SHIFT(to state 64)] [term 44:SHIFT(to state 12)]
-From state #64
- [term 33:SHIFT(to state 65)]
-From state #65
+From state #88
+ [term 39:SHIFT(to state 89)] [term 44:SHIFT(to state 12)]
+From state #89
+ [term 33:SHIFT(to state 90)]
+From state #90
  [term 0:REDUCE(with prod 4)] [term 2:REDUCE(with prod 4)]
-From state #66
+From state #91
  [term 0:REDUCE(with prod 1)]
-From state #67
+From state #92
  [term 0:REDUCE(with prod 3)] [term 2:REDUCE(with prod 3)]
 ------------------------------
 -------- REDUCE_TABLE --------
 From state #0
  [non term 0->state 2] [non term 1->state 1] [non term 2->state 3]
 From state #1
- [non term 2->state 67]
+ [non term 2->state 92]
 From state #2
 From state #3
 From state #4
 From state #5
 From state #6
- [non term 3->state 63]
+ [non term 3->state 88]
 From state #7
 From state #8
 From state #9
@@ -929,64 +1540,97 @@ From state #24
 From state #25
 From state #26
 From state #27
- [non term 5->state 33]
+ [non term 5->state 36]
 From state #28
- [non term 5->state 56] [non term 6->state 54] [non term 11->state 55]
+ [non term 5->state 81] [non term 6->state 79] [non term 11->state 80]
 From state #29
+ [non term 5->state 75]
 From state #30
 From state #31
 From state #32
- [non term 5->state 49]
 From state #33
+ [non term 5->state 68]
 From state #34
- [non term 5->state 36]
+ [non term 5->state 67]
 From state #35
 From state #36
 From state #37
 From state #38
+ [non term 5->state 39]
 From state #39
 From state #40
- [non term 5->state 43] [non term 9->state 41] [non term 10->state 42]
 From state #41
 From state #42
 From state #43
 From state #44
- [non term 5->state 45]
+ [non term 5->state 47] [non term 9->state 45] [non term 10->state 46]
 From state #45
 From state #46
 From state #47
 From state #48
+ [non term 5->state 49]
 From state #49
 From state #50
- [non term 5->state 43] [non term 9->state 51] [non term 10->state 42]
 From state #51
 From state #52
+ [non term 5->state 47] [non term 9->state 53] [non term 10->state 46]
 From state #53
 From state #54
 From state #55
- [non term 5->state 56] [non term 6->state 58]
 From state #56
 From state #57
 From state #58
+ [non term 5->state 59]
 From state #59
 From state #60
 From state #61
- [non term 5->state 62]
 From state #62
+ [non term 5->state 66]
 From state #63
- [non term 4->state 11]
+ [non term 5->state 47] [non term 9->state 64] [non term 10->state 46]
 From state #64
 From state #65
 From state #66
 From state #67
+From state #68
+From state #69
+ [non term 5->state 70]
+From state #70
+From state #71
+ [non term 5->state 72]
+From state #72
+From state #73
+From state #74
+From state #75
+From state #76
+ [non term 5->state 77]
+From state #77
+From state #78
+From state #79
+From state #80
+ [non term 5->state 81] [non term 6->state 83]
+From state #81
+From state #82
+From state #83
+From state #84
+From state #85
+From state #86
+ [non term 5->state 87]
+From state #87
+From state #88
+ [non term 4->state 11]
+From state #89
+From state #90
+From state #91
+From state #92
 -----------------------------
 ------- CUP v0.11a beta 20060608 Parser Generation Summary -------
-  0 errors and 27 warnings
-  45 terminals, 12 non-terminals, and 31 productions declared, 
-  producing 68 unique parse states.
-  26 terminals declared but not used.
+  0 errors and 19 warnings
+  45 terminals, 12 non-terminals, and 36 productions declared, 
+  producing 93 unique parse states.
+  16 terminals declared but not used.
   0 non-terminals declared but not used.
   0 productions never reduced.
-  1 conflict detected (10000 expected).
+  3 conflicts detected (10000 expected).
   Code written to "CoolParser.java", and "TokenConstants.java".
 ---------------------------------------------------- (v0.11a beta 20060608)

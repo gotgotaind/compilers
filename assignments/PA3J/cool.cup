@@ -118,9 +118,22 @@ formal
 	;
 
 expr
-	::= expr:e DOT OBJECTID:o LPAREN exprs_opt:es RPAREN					{: RESULT = new dispatch(curr_lineno(),e,o,es); :}
+	::= OBJECTID:o DARROW expr:e			{: RESULT = new assign(curr_lineno(),o,e); :}
+	| expr:e DOT OBJECTID:o LPAREN exprs_opt:es RPAREN					{: RESULT = new dispatch(curr_lineno(),e,o,es); :}
+	| expr:e DOT OBJECTID:o AT TYPEID:t LPAREN exprs_opt:es RPAREN					{: RESULT = new static_dispatch(curr_lineno(),e,t,o,es); :}
 	| OBJECTID:o LPAREN exprs_opt:es RPAREN									{: RESULT = new dispatch(curr_lineno(),new object(curr_lineno(),AbstractTable.idtable.addString("self")),o,es); :}
+	/* if expr then expr else expr fi */
+	| IF expr:e1 THEN expr:e2 ELSE expr:e3 FI 			{: RESULT = new cond(curr_lineno(),e1,e2,e3); :}
+	/* while expr loop expr pool */
+	| WHILE expr:e1 LOOP expr:e2 POOL 		{: RESULT = new loop(curr_lineno(),e1,e2); :}
+	/* { [[expr; ]]+} */
 	| LBRACE expr_semi_list:esl RBRACE											{: RESULT = new block(curr_lineno(),esl); :}
+	/* let ID : TYPE [ <- expr ] [[, ID : TYPE [ <- expr ]]]* in expr */
+	/* let ID : TYPE in expr */
+	| LET OBJECTID:o COLON TYPEID:t IN expr:e2		{: RESULT = new let(curr_lineno(),o,t,new no_expr(curr_lineno()),e2); :}
+	/* let ID : TYPE [ <- expr ] in expr */
+	| LET OBJECTID:o COLON TYPEID:t DARROW expr:e1 IN expr:e2		{: RESULT = new let(curr_lineno(),o,t,e1,e2); :}
+	/* new TYPE */
 	| NEW TYPEID:t	{: RESULT = new new_(curr_lineno(),t); :}
 	| ISVOID expr:e															{: RESULT = new isvoid(curr_lineno(),e); :}
 	| LPAREN expr:e RPAREN		{: RESULT = e; :}
