@@ -1,7 +1,7 @@
 class Main inherits IO {
    main(): SELF_TYPE {
       {
-         out_string((isvoid self).type_name());
+         out_string(not (isvoid self).type_name());
       }
    };
 };
