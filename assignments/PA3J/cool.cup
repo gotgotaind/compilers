@@ -69,7 +69,7 @@ nonterminal Classes class_list;
 nonterminal class_c class;
 nonterminal Features feature_list;
 nonterminal Feature feature;
-nonterminal Expression expr,expr_semi;
+nonterminal Expression expr,expr_semi,let2,let1;
 nonterminal Formals formal_list;
 nonterminal Formal formal;
 
@@ -128,11 +128,17 @@ expr
 	| WHILE expr:e1 LOOP expr:e2 POOL 		{: RESULT = new loop(curr_lineno(),e1,e2); :}
 	/* { [[expr; ]]+} */
 	| LBRACE expr_semi_list:esl RBRACE											{: RESULT = new block(curr_lineno(),esl); :}
+
 	/* let ID : TYPE [ <- expr ] [[, ID : TYPE [ <- expr ]]]* in expr */
-	/* let ID : TYPE in expr */
-	| LET OBJECTID:o COLON TYPEID:t IN expr:e2		{: RESULT = new let(curr_lineno(),o,t,new no_expr(curr_lineno()),e2); :}
+	| LET OBJECTID:o COLON TYPEID:t DARROW expr:e1 COMMA let2:e2 	{: RESULT = new let(curr_lineno(),o,t,e1,e2); :}
+	/* let ID : TYPE [[, ID : TYPE [ <- expr ]]]* in expr */
+	| LET OBJECTID:o COLON TYPEID:t COMMA let2:e2		{: RESULT = new let(curr_lineno(),o,t,new no_expr(curr_lineno()),e2); :}
 	/* let ID : TYPE [ <- expr ] in expr */
-	| LET OBJECTID:o COLON TYPEID:t DARROW expr:e1 IN expr:e2		{: RESULT = new let(curr_lineno(),o,t,e1,e2); :}
+	|let1:l		{: RESULT = l; :}
+
+	/* case expr of [[ID : TYPE => expr; ]]+esac */		
+	| 
+
 	/* new TYPE */
 	| NEW TYPEID:t	{: RESULT = new new_(curr_lineno(),t); :}
 	| ISVOID expr:e															{: RESULT = new isvoid(curr_lineno(),e); :}
@@ -161,4 +167,24 @@ exprs_opt
 exprs
 	::= expr:e						{: RESULT = new Expressions(curr_lineno()).appendElement(e); :}	
 	| exprs:es COMMA expr:e 			{: RESULT = es.appendElement(e); :}
+	;
+
+let2
+	::=
+	/* ID : TYPE [ <- expr ] [[, ID : TYPE [ <- expr ]]]* in expr */
+	| OBJECTID:o COLON TYPEID:t DARROW expr:e1 COMMA let2:e2 	{: RESULT = new let(curr_lineno(),o,t,e1,e2); :}
+	/* ID : TYPE [[, ID : TYPE [ <- expr ]]]* in expr */
+	| OBJECTID:o COLON TYPEID:t COMMA let2:e2		{: RESULT = new let(curr_lineno(),o,t,new no_expr(curr_lineno()),e2); :}
+	/* let ID : TYPE [ <- expr ] in expr */
+	| OBJECTID:o COLON TYPEID:t DARROW expr:e1 IN expr:e2		{: RESULT = new let(curr_lineno(),o,t,e1,e2); :}
+	/* let ID : TYPE in expr */
+	| OBJECTID:o COLON TYPEID:t IN expr:e2		{: RESULT = new let(curr_lineno(),o,t,new no_expr(curr_lineno()),e2); :}
+	;
+
+let1
+	::=
+	/* let ID : TYPE [ <- expr ] in expr */
+	| LET OBJECTID:o COLON TYPEID:t DARROW expr:e1 IN expr:e2		{: RESULT = new let(curr_lineno(),o,t,e1,e2); :}
+	/* let ID : TYPE in expr */
+	| LET OBJECTID:o COLON TYPEID:t IN expr:e2		{: RESULT = new let(curr_lineno(),o,t,new no_expr(curr_lineno()),e2); :}
 	;
