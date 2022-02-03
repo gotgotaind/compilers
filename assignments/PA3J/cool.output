@@ -447,7 +447,7 @@ Warning : *** Shift/Reduce conflict found in state #55
 [47] exprs_opt ::= 
 [48] exprs_opt ::= exprs 
 [49] exprs ::= expr 
-[50] exprs ::= exprs COMMA expr 
+[50] exprs ::= expr COMMA exprs 
 [51] let2 ::= 
 [52] let2 ::= OBJECTID COLON TYPEID ASSIGN expr COMMA let2 
 [53] let2 ::= OBJECTID COLON TYPEID COMMA let2 
@@ -1636,7 +1636,7 @@ lalr_state [59]: {
   [expr ::= (*) expr MULT expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) expr EQ expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) STR_CONST , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [exprs ::= (*) exprs COMMA expr , {COMMA RPAREN }]
+  [exprs ::= (*) expr COMMA exprs , {RPAREN }]
   [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) LET OBJECTID COLON TYPEID COMMA let2 , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) expr PLUS expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
@@ -1657,7 +1657,7 @@ lalr_state [59]: {
   [expr ::= (*) expr LE expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= expr AT TYPEID DOT OBJECTID LPAREN (*) exprs_opt RPAREN , {ELSE FI IN LOOP POOL THEN OF LE PLUS DIV MINUS MULT EQ LT DOT COMMA SEMI RPAREN AT RBRACE }]
   [expr ::= (*) INT_CONST , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [exprs ::= (*) expr , {COMMA RPAREN }]
+  [exprs ::= (*) expr , {RPAREN }]
   [expr ::= (*) expr AT TYPEID DOT OBJECTID LPAREN exprs_opt RPAREN , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) LET OBJECTID COLON TYPEID ASSIGN expr COMMA let2 , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) ISVOID expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
@@ -1693,17 +1693,19 @@ lalr_state [60]: {
   [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= expr (*) LT expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= expr (*) MULT expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
+  [exprs ::= expr (*) COMMA exprs , {RPAREN }]
   [expr ::= expr (*) EQ expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= expr (*) MINUS expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [exprs ::= expr (*) , {COMMA RPAREN }]
+  [exprs ::= expr (*) , {RPAREN }]
 }
 transition on LT to state [54]
 transition on AT to state [53]
+transition on COMMA to state [64]
 transition on DIV to state [51]
 transition on DOT to state [50]
 transition on LE to state [49]
-transition on EQ to state [47]
 transition on PLUS to state [48]
+transition on EQ to state [47]
 transition on MULT to state [46]
 transition on MINUS to state [45]
 
@@ -1711,17 +1713,20 @@ transition on MINUS to state [45]
 lalr_state [61]: {
   [expr ::= expr AT TYPEID DOT OBJECTID LPAREN exprs_opt (*) RPAREN , {ELSE FI IN LOOP POOL THEN OF LE PLUS DIV MINUS MULT EQ LT DOT COMMA SEMI RPAREN AT RBRACE }]
 }
-transition on RPAREN to state [65]
+transition on RPAREN to state [63]
 
 -------------------
 lalr_state [62]: {
   [exprs_opt ::= exprs (*) , {RPAREN }]
-  [exprs ::= exprs (*) COMMA expr , {COMMA RPAREN }]
 }
-transition on COMMA to state [63]
 
 -------------------
 lalr_state [63]: {
+  [expr ::= expr AT TYPEID DOT OBJECTID LPAREN exprs_opt RPAREN (*) , {ELSE FI IN LOOP POOL THEN OF LE PLUS DIV MINUS MULT EQ LT DOT COMMA SEMI RPAREN AT RBRACE }]
+}
+
+-------------------
+lalr_state [64]: {
   [let1 ::= (*) LET OBJECTID COLON TYPEID ASSIGN expr IN expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) OBJECTID ASSIGN expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) WHILE expr LOOP expr POOL , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
@@ -1729,7 +1734,8 @@ lalr_state [63]: {
   [expr ::= (*) expr MULT expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) expr EQ expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) STR_CONST , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [exprs ::= exprs COMMA (*) expr , {COMMA RPAREN }]
+  [exprs ::= expr COMMA (*) exprs , {RPAREN }]
+  [exprs ::= (*) expr COMMA exprs , {RPAREN }]
   [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) LET OBJECTID COLON TYPEID COMMA let2 , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) expr PLUS expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
@@ -1748,6 +1754,7 @@ lalr_state [63]: {
   [expr ::= (*) expr MINUS expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) expr LE expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) INT_CONST , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
+  [exprs ::= (*) expr , {RPAREN }]
   [expr ::= (*) expr AT TYPEID DOT OBJECTID LPAREN exprs_opt RPAREN , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) LET OBJECTID COLON TYPEID ASSIGN expr COMMA let2 , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) ISVOID expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
@@ -1757,11 +1764,12 @@ lalr_state [63]: {
 transition on LPAREN to state [43]
 transition on LET to state [42]
 transition on NEG to state [41]
-transition on expr to state [64]
+transition on expr to state [60]
 transition on NOT to state [39]
 transition on CASE to state [38]
 transition on OBJECTID to state [37]
 transition on ISVOID to state [36]
+transition on exprs to state [65]
 transition on IF to state [35]
 transition on BOOL_CONST to state [34]
 transition on STR_CONST to state [33]
@@ -1772,31 +1780,8 @@ transition on LBRACE to state [29]
 transition on WHILE to state [28]
 
 -------------------
-lalr_state [64]: {
-  [expr ::= expr (*) AT TYPEID DOT OBJECTID LPAREN exprs_opt RPAREN , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [expr ::= expr (*) LE expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [expr ::= expr (*) DIV expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [expr ::= expr (*) PLUS expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [expr ::= expr (*) DOT OBJECTID LPAREN exprs_opt RPAREN , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [expr ::= expr (*) LT expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [exprs ::= exprs COMMA expr (*) , {COMMA RPAREN }]
-  [expr ::= expr (*) MULT expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [expr ::= expr (*) EQ expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [expr ::= expr (*) MINUS expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-}
-transition on LT to state [54]
-transition on AT to state [53]
-transition on DIV to state [51]
-transition on DOT to state [50]
-transition on LE to state [49]
-transition on EQ to state [47]
-transition on PLUS to state [48]
-transition on MULT to state [46]
-transition on MINUS to state [45]
-
--------------------
 lalr_state [65]: {
-  [expr ::= expr AT TYPEID DOT OBJECTID LPAREN exprs_opt RPAREN (*) , {ELSE FI IN LOOP POOL THEN OF LE PLUS DIV MINUS MULT EQ LT DOT COMMA SEMI RPAREN AT RBRACE }]
+  [exprs ::= expr COMMA exprs (*) , {RPAREN }]
 }
 
 -------------------
@@ -1837,7 +1822,7 @@ lalr_state [68]: {
   [expr ::= (*) expr MULT expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) expr EQ expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) STR_CONST , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [exprs ::= (*) exprs COMMA expr , {COMMA RPAREN }]
+  [exprs ::= (*) expr COMMA exprs , {RPAREN }]
   [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) LET OBJECTID COLON TYPEID COMMA let2 , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) expr PLUS expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
@@ -1858,7 +1843,7 @@ lalr_state [68]: {
   [expr ::= (*) expr MINUS expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) expr LE expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) INT_CONST , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [exprs ::= (*) expr , {COMMA RPAREN }]
+  [exprs ::= (*) expr , {RPAREN }]
   [expr ::= (*) expr AT TYPEID DOT OBJECTID LPAREN exprs_opt RPAREN , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) LET OBJECTID COLON TYPEID ASSIGN expr COMMA let2 , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) ISVOID expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
@@ -2897,7 +2882,7 @@ lalr_state [122]: {
   [expr ::= (*) expr MULT expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) expr EQ expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) STR_CONST , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [exprs ::= (*) exprs COMMA expr , {COMMA RPAREN }]
+  [exprs ::= (*) expr COMMA exprs , {RPAREN }]
   [expr ::= OBJECTID LPAREN (*) exprs_opt RPAREN , {ELSE FI IN LOOP POOL THEN OF LE PLUS DIV MINUS MULT EQ LT DOT COMMA SEMI RPAREN AT RBRACE }]
   [expr ::= (*) OBJECTID LPAREN exprs_opt RPAREN , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) LET OBJECTID COLON TYPEID COMMA let2 , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
@@ -2918,7 +2903,7 @@ lalr_state [122]: {
   [expr ::= (*) expr MINUS expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) expr LE expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) INT_CONST , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
-  [exprs ::= (*) expr , {COMMA RPAREN }]
+  [exprs ::= (*) expr , {RPAREN }]
   [expr ::= (*) expr AT TYPEID DOT OBJECTID LPAREN exprs_opt RPAREN , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) LET OBJECTID COLON TYPEID ASSIGN expr COMMA let2 , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
   [expr ::= (*) ISVOID expr , {LE PLUS DIV MINUS MULT EQ LT DOT COMMA RPAREN AT }]
@@ -4003,13 +3988,24 @@ From state #60
  [term 25:SHIFT(to state 51)] [term 26:SHIFT(to state 45)]
  [term 27:SHIFT(to state 46)] [term 28:SHIFT(to state 47)]
  [term 29:SHIFT(to state 54)] [term 30:SHIFT(to state 50)]
- [term 32:REDUCE(with prod 49)] [term 36:REDUCE(with prod 49)]
+ [term 32:SHIFT(to state 64)] [term 36:REDUCE(with prod 49)]
  [term 37:SHIFT(to state 53)]
 From state #61
- [term 36:SHIFT(to state 65)]
+ [term 36:SHIFT(to state 63)]
 From state #62
- [term 32:SHIFT(to state 63)] [term 36:REDUCE(with prod 48)]
+ [term 36:REDUCE(with prod 48)]
 From state #63
+ [term 3:REDUCE(with prod 17)] [term 4:REDUCE(with prod 17)]
+ [term 6:REDUCE(with prod 17)] [term 10:REDUCE(with prod 17)]
+ [term 11:REDUCE(with prod 17)] [term 12:REDUCE(with prod 17)]
+ [term 16:REDUCE(with prod 17)] [term 22:REDUCE(with prod 17)]
+ [term 24:REDUCE(with prod 17)] [term 25:REDUCE(with prod 17)]
+ [term 26:REDUCE(with prod 17)] [term 27:REDUCE(with prod 17)]
+ [term 28:REDUCE(with prod 17)] [term 29:REDUCE(with prod 17)]
+ [term 30:REDUCE(with prod 17)] [term 32:REDUCE(with prod 17)]
+ [term 33:REDUCE(with prod 17)] [term 36:REDUCE(with prod 17)]
+ [term 37:REDUCE(with prod 17)] [term 39:REDUCE(with prod 17)]
+From state #64
  [term 5:SHIFT(to state 35)] [term 8:SHIFT(to state 42)]
  [term 13:SHIFT(to state 28)] [term 14:SHIFT(to state 38)]
  [term 18:SHIFT(to state 31)] [term 19:SHIFT(to state 36)]
@@ -4023,24 +4019,8 @@ From state #63
  [term 38:SHIFT(to state 29)] [term 40:SHIFT(to state 33)]
  [term 41:SHIFT(to state 30)] [term 42:SHIFT(to state 34)]
  [term 44:SHIFT(to state 37)]
-From state #64
- [term 22:SHIFT(to state 49)] [term 24:SHIFT(to state 48)]
- [term 25:SHIFT(to state 51)] [term 26:SHIFT(to state 45)]
- [term 27:SHIFT(to state 46)] [term 28:SHIFT(to state 47)]
- [term 29:SHIFT(to state 54)] [term 30:SHIFT(to state 50)]
- [term 32:REDUCE(with prod 50)] [term 36:REDUCE(with prod 50)]
- [term 37:SHIFT(to state 53)]
 From state #65
- [term 3:REDUCE(with prod 17)] [term 4:REDUCE(with prod 17)]
- [term 6:REDUCE(with prod 17)] [term 10:REDUCE(with prod 17)]
- [term 11:REDUCE(with prod 17)] [term 12:REDUCE(with prod 17)]
- [term 16:REDUCE(with prod 17)] [term 22:REDUCE(with prod 17)]
- [term 24:REDUCE(with prod 17)] [term 25:REDUCE(with prod 17)]
- [term 26:REDUCE(with prod 17)] [term 27:REDUCE(with prod 17)]
- [term 28:REDUCE(with prod 17)] [term 29:REDUCE(with prod 17)]
- [term 30:REDUCE(with prod 17)] [term 32:REDUCE(with prod 17)]
- [term 33:REDUCE(with prod 17)] [term 36:REDUCE(with prod 17)]
- [term 37:REDUCE(with prod 17)] [term 39:REDUCE(with prod 17)]
+ [term 36:REDUCE(with prod 50)]
 From state #66
  [term 3:REDUCE(with prod 31)] [term 4:REDUCE(with prod 31)]
  [term 6:REDUCE(with prod 31)] [term 10:REDUCE(with prod 31)]
@@ -4870,8 +4850,8 @@ From state #60
 From state #61
 From state #62
 From state #63
- [non term 5->state 64] [non term 8->state 32]
 From state #64
+ [non term 5->state 60] [non term 8->state 32] [non term 13->state 65]
 From state #65
 From state #66
 From state #67

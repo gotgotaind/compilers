@@ -198,7 +198,7 @@ exprs_opt
 
 exprs
 	::= expr:e						{: RESULT = new Expressions(curr_lineno()).appendElement(e); :}	
-	| exprs:es COMMA expr:e 			{: RESULT = es.appendElement(e); :}
+	| expr:e COMMA exprs:es			{: RESULT = es.appendElement(e); :}
 	;
 
 let2
