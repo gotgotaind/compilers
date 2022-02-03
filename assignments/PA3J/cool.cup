@@ -147,11 +147,25 @@ expr
 	| expr:e1 MINUS expr:e2 {: RESULT = new sub(curr_lineno(),e1,e2); :}
 	| expr:e1 MULT expr:e2 {: RESULT = new mul(curr_lineno(),e1,e2); :}
 	| expr:e1 DIV expr:e2 {: RESULT = new divide(curr_lineno(),e1,e2); :}
+	/* ˜expr */
 	| NEG expr:e {: RESULT = new neg(curr_lineno(),e); :}
+	/* expr < expr */
+	| expr:e1 LT expr:e2 {: RESULT = new lt(curr_lineno(),e1,e2); :}
+	/* expr <= expr */
+	| expr:e1 LE expr:e2 {: RESULT = new leq(curr_lineno(),e1,e2); :}
+	/* expr == expr */
+	| expr:e1 EQ expr:e2 {: RESULT = new eq(curr_lineno(),e1,e2); :}
 	| LPAREN expr:e RPAREN		{: RESULT = e; :}
+	/* not expr */
+	| NOT expr:e {: RESULT = new comp(curr_lineno(),e); :}
+	/* ID */
 	| OBJECTID:o	{: RESULT = new object(curr_lineno(),o); :}
+	/* integer */
 	| INT_CONST:i	{: RESULT = new int_const(curr_lineno(),i); :}
+	/* string */
 	| STR_CONST:s	{: RESULT = new string_const(curr_lineno(),s); :}
+	/* true/false */
+	| BOOL_CONST:b	 {: RESULT = new bool_const(curr_lineno(),b); :}
 	;
 
 id_t_e_semi_list
