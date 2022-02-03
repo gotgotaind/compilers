@@ -77,6 +77,8 @@ nonterminal Cases  id_t_e_semi_list;
 nonterminal Expressions exprs_opt,exprs,expr_semi_list;
 
 /* Precedence declarations go here. */
+precedence left PLUS,MINUS;
+precedence left MULT,DIV;
 
 program	
 	::= class_list:cl														    {: RESULT = new programc(curr_lineno(), cl); :}
@@ -103,8 +105,8 @@ feature_list
 
 feature
 	::= OBJECTID:o LPAREN formal_list:formal_l RPAREN COLON TYPEID:t LBRACE expr:e RBRACE SEMI {: RESULT = new method(curr_lineno(),o,formal_l,t,e); :}
-	|	OBJECTID:o COLON TYPEID:t ASSIGN expr:e									{: RESULT = new attr(curr_lineno(),o,t,e); :}
-	|	OBJECTID:o COLON TYPEID:t												{: RESULT = new attr(curr_lineno(),o,t,new no_expr(curr_lineno())); :}
+	|	OBJECTID:o COLON TYPEID:t ASSIGN expr:e	SEMI								{: RESULT = new attr(curr_lineno(),o,t,e); :}
+	|	OBJECTID:o COLON TYPEID:t SEMI										{: RESULT = new attr(curr_lineno(),o,t,new no_expr(curr_lineno())); :}
 	;
 
 formal_list
@@ -120,8 +122,11 @@ formal
 
 expr
 	::= OBJECTID:o ASSIGN expr:e			{: RESULT = new assign(curr_lineno(),o,e); :}
+	/* expr.ID( [ expr [[, expr]]* ] ) */
 	| expr:e DOT OBJECTID:o LPAREN exprs_opt:es RPAREN					{: RESULT = new dispatch(curr_lineno(),e,o,es); :}
-	| expr:e DOT OBJECTID:o AT TYPEID:t LPAREN exprs_opt:es RPAREN					{: RESULT = new static_dispatch(curr_lineno(),e,t,o,es); :}
+	/* expr[@TYPE].ID( [ expr [[, expr]]* ] ) */
+	| expr:e AT TYPEID:t DOT OBJECTID:o LPAREN exprs_opt:es RPAREN					{: RESULT = new static_dispatch(curr_lineno(),e,t,o,es); :}
+	/* ID( [ expr [[, expr]]* ] ) */
 	| OBJECTID:o LPAREN exprs_opt:es RPAREN									{: RESULT = new dispatch(curr_lineno(),new object(curr_lineno(),AbstractTable.idtable.addString("self")),o,es); :}
 	/* if expr then expr else expr fi */
 	| IF expr:e1 THEN expr:e2 ELSE expr:e3 FI 			{: RESULT = new cond(curr_lineno(),e1,e2,e3); :}
