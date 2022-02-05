@@ -1,7 +1,7 @@
 
 ASSN = 3J
 CLASS= cs143
-CLASSDIR= ../..
+CLASSDIR=/usr/class/compilers
 LIB=  -lfl 
 AR= gar
 ARCHIVE_NEW= -cr
