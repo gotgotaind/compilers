@@ -111,7 +111,7 @@ feature
 
 formal_list
 	::= formal:f																{: RESULT = (new Formals(curr_lineno())).appendElement(f); :}
-	| formal:f COMMA formal_list:fl 											{: RESULT = fl.appendElement(f); :}
+	| formal_list:fl COMMA formal:f			{: RESULT = fl.appendElement(f); :}
 	| 																			{: RESULT = (new Formals(curr_lineno())); :}
 
 	;
@@ -183,12 +183,13 @@ id_t_e_semi_list
 expr_semi_list
 	::=
 	expr_semi:e							{: RESULT = new Expressions(curr_lineno()).appendElement(e); :}
-	| expr_semi_list:esl expr_semi:e   	{: RESULT = esl.appendElement(e); :}
+	|  expr_semi_list:esl expr_semi:e   	{: RESULT = esl.appendElement(e); :}
 	;
 
 expr_semi
 	::=
 	expr:e SEMI					{: RESULT = e; :}
+	| error SEMI
 	;
 
 exprs_opt
@@ -216,7 +217,7 @@ let2
 let1
 	::=
 	/* let ID : TYPE [ <- expr ] in expr */
-	| LET OBJECTID:o COLON TYPEID:t ASSIGN expr:e1 IN expr:e2		{: RESULT = new let(curr_lineno(),o,t,e1,e2); :}
+	LET OBJECTID:o COLON TYPEID:t ASSIGN expr:e1 IN expr:e2		{: RESULT = new let(curr_lineno(),o,t,e1,e2); :}
 	/* let ID : TYPE in expr */
 	| LET OBJECTID:o COLON TYPEID:t IN expr:e2		{: RESULT = new let(curr_lineno(),o,t,new no_expr(curr_lineno()),e2); :}
 	;
