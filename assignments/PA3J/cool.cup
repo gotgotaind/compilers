@@ -109,12 +109,14 @@ class
 feature_list
 	::= feature_list:fl feature:f												{: RESULT = fl.appendElement(f); :}
 	|	/* empty */																{: RESULT = new Features(curr_lineno()); :}
+	/* | error   {: RESULT = new Features(curr_lineno()); :} */
 	;
 
 feature
 	::= OBJECTID:o LPAREN formal_list:formal_l RPAREN COLON TYPEID:t LBRACE expr:e RBRACE SEMI {: RESULT = new method(curr_lineno(),o,formal_l,t,e); :}
 	|	OBJECTID:o COLON TYPEID:t ASSIGN expr:e	SEMI								{: RESULT = new attr(curr_lineno(),o,t,e); :}
 	|	OBJECTID:o COLON TYPEID:t SEMI										{: RESULT = new attr(curr_lineno(),o,t,new no_expr(curr_lineno())); :}
+	| error SEMI
 	;
 
 formal_list
@@ -147,6 +149,7 @@ expr
 	| LET OBJECTID:o COLON TYPEID:t ASSIGN expr:e1 COMMA let2:e2 	{: RESULT = new let(curr_lineno(),o,t,e1,e2); :}
 	/* let ID : TYPE [[, ID : TYPE [ <- expr ]]]* in expr */
 	| LET OBJECTID:o COLON TYPEID:t COMMA let2:e2		{: RESULT = new let(curr_lineno(),o,t,new no_expr(curr_lineno()),e2); :}
+	| LET error COMMA let2:e2
 	/* let ID : TYPE [ <- expr ] in expr */
 	|let1:l		{: RESULT = l; :}
 
