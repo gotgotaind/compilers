@@ -77,8 +77,15 @@ nonterminal Cases  id_t_e_semi_list;
 nonterminal Expressions exprs_opt,exprs,expr_semi_list;
 
 /* Precedence declarations go here. */
+precedence nonassoc ASSIGN;
+precedence left NOT;
+precedence nonassoc LT,LE,EQ; 
 precedence left PLUS,MINUS;
-precedence left MULT,DIV;
+precedence left MULT,DIV; 
+precedence left ISVOID;
+precedence left NEG;
+precedence left AT;
+precedence left DOT; 
 
 program	
 	::= class_list:cl														    {: RESULT = new programc(curr_lineno(), cl); :}
