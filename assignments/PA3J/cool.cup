@@ -102,6 +102,7 @@ class_list
 class
 	::= CLASS TYPEID:n LBRACE feature_list:fl RBRACE SEMI					    {: RESULT = new class_c(curr_lineno(), n, AbstractTable.idtable.addString("Object"), fl, curr_filename()); :}
 	| CLASS TYPEID:n INHERITS TYPEID:p LBRACE feature_list:fl RBRACE SEMI	    {: RESULT = new class_c(curr_lineno(), n, p, fl, curr_filename()); :}
+	| error
 	;
 
 /* Feature list may be empty, but no empty features in list. */
@@ -206,7 +207,7 @@ exprs_opt
 
 exprs
 	::= expr:e						{: RESULT = new Expressions(curr_lineno()).appendElement(e); :}	
-	| expr:e COMMA exprs:es			{: RESULT = es.appendElement(e); :}
+	|   exprs:es COMMA expr:e		{: RESULT = es.appendElement(e); :}
 	;
 
 let2
