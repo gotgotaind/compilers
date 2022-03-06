@@ -1,2 +1,2 @@
 #!/bin/csh -f
-./lexer $* | ./parser $* | ./semant $* 
+../lexer $* | ../parser $* | java -classpath /usr/class/cs143/cool/lib:..:/usr/java/lib/rt.jar Semant $*
