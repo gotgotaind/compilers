@@ -3,7 +3,7 @@ ASSN = 5J
 CLASS= cs143
 CLASSDIR= ../..
 
-SRC= CgenClassTable.java CgenNode.java CgenSupport.java TreeConstants.java cool-tree.java IntSymbol.java StringSymbol.java BoolConst.java example.cl README
+SRC= CgenSupport.java TreeConstants.java cool-tree.java IntSymbol.java StringSymbol.java BoolConst.java Semant.java example.cl README
 CSRC = \
 	ASTConstants.java \
 	ASTLexer.java \
@@ -15,19 +15,19 @@ CSRC = \
 	IdTable.java \
 	IntTable.java \
 	ListNode.java \
-	Cgen.java \
 	StringTable.java \
 	SymbolTable.java \
 	SymtabExample.java \
 	TokenConstants.java \
 	TreeNode.java \
 	ClassTable.java \
-	Utilities.java
+	Utilities.java \
+	Semant.java
 
 TSRC= mycoolc cool-tree.aps
 CGEN= 
-LIBS= lexer parser semant
-CFIL= ${CSRC} ${CGEN} CgenClassTable.java CgenNode.java CgenSupport.java TreeConstants.java cool-tree.java IntSymbol.java StringSymbol.java BoolConst.java
+LIBS= lexer parser
+CFIL= ${CSRC} ${CGEN} CgenSupport.java TreeConstants.java cool-tree.java IntSymbol.java StringSymbol.java BoolConst.java
 HFIL= 
 LSRC= Makefile
 CLS= ${CFIL:.java=.class}
@@ -36,7 +36,7 @@ OUTPUT= example.output
 JAVAC := javac
 
 # rt.jar yet again
-CLASSPATH := ${CLASSDIR}/lib:.:/usr/java/lib/rt.jar
+CLASSPATH := /usr/class/compilers/lib:../../lib:.:/usr/java/lib/rt.jar
 
 source: ${SRC} ${TSRC} ${LSRC} ${LIBS} ${CSRC}
 
@@ -49,6 +49,12 @@ cgen: Makefile ${CLS}
 	echo '#!/bin/sh' >> cgen
 	echo 'java -classpath ${CLASSPATH} Cgen $$*' >> cgen
 	chmod 755 cgen
+
+semant: Makefile ${CLS}
+	@rm -f mysemant
+	echo '#!/bin/sh' >> mysemant
+	echo './lexer $$* | ./parser $$* | java -classpath ${CLASSPATH} Semant $$*' >> mysemant
+	chmod 755 mysemant
 
 symtab-example: Makefile ${CLS}
 	@rm -f symtab-example
