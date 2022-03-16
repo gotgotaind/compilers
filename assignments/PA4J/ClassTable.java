@@ -1,4 +1,5 @@
 import java.io.PrintStream;
+import java.util.Enumeration;
 
 /** This class may be used to contain the semantic information such as
  * the inheritance graph.  You may use it or not as you like: it is only
@@ -176,6 +177,13 @@ class ClassTable {
 	errorStream = System.err;
 	
 	/* fill this in */
+		System.out.println("Hey, it's me!");
+		Enumeration cls_e = cls.getElements();
+		while( cls_e.hasMoreElements() ) {
+			class_c c = (class_c) cls_e.nextElement();
+			System.out.println("Class "+c.name+" parent is "+c.parent);
+		}
+
     }
 
     /** Prints line number and file name of the given class.
