@@ -10,6 +10,7 @@ import java.util.HashMap;
 class ClassTable {
     private int semantErrors;
     private PrintStream errorStream;
+	private Classes cls_with_basics;
 
     /** Creates data structures representing basic Cool classes (Object,
      * IO, Int, Bool, String).  Please note: as is this method does not
@@ -170,6 +171,12 @@ class ClassTable {
 
 	/* Do somethind with Object_class, IO_class, Int_class,
            Bool_class, and Str_class here */
+		   cls_with_basics.addElement(Object_class);
+		   cls_with_basics.addElement(IO_class);
+		   cls_with_basics.addElement(Int_class);
+		   cls_with_basics.addElement(Bool_class);
+		   cls_with_basics.addElement(Str_class);
+
 
     }
 
@@ -194,16 +201,25 @@ class ClassTable {
 	
 	/* fill this in */
 		System.out.println("Hey, it's me!");
-		
+
+		// initialize a Classes that will include basic classes
+		cls_with_basics=new Classes(0);
+		// add the basic classes
+		installBasicClasses();
+
 		// get the list of classes
 		Enumeration cls_e = cls.getElements();
+		while( cls_e.hasMoreElements() ) {
+			class_c c = (class_c) cls_e.nextElement();
+			cls_with_basics.addElement(c);
+		}
 
 		// make a dictionnary of inheritance tree nodes to be able to get node by name
 		HashMap<AbstractSymbol,herit_node> herit_node_by_name = new HashMap<AbstractSymbol,herit_node>();
 
-
-		while( cls_e.hasMoreElements() ) {
-			class_c c = (class_c) cls_e.nextElement();
+		Enumeration cls_with_basics_e = cls_with_basics.getElements();
+		while( cls_with_basics_e.hasMoreElements() ) {
+			class_c c = (class_c) cls_with_basics_e.nextElement();
 			System.out.println("Class "+c.name+" parent is "+c.parent);
 			herit_node hn = new herit_node(c.name, c.parent);
 
@@ -226,6 +242,9 @@ class ClassTable {
 			}
 			else
 			{
+				if( hn.parent_name == herit_node_by_name.get("_no_class").class_name ) {
+					System.out.println("Ok, "+hn.class_name+" is Object.");
+				}
 				System.out.println("Class "+hn.class_name+" parent does not exist.");
 				semantError();
 			}
