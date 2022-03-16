@@ -1,5 +1,8 @@
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.HashMap;
 
 /** This class may be used to contain the semantic information such as
  * the inheritance graph.  You may use it or not as you like: it is only
@@ -169,6 +172,19 @@ class ClassTable {
            Bool_class, and Str_class here */
 
     }
+
+	// node class to make an inheritance tree
+	class herit_node {
+		AbstractSymbol class_name;
+		AbstractSymbol parent_name;
+		herit_node parent;
+		ArrayList<herit_node> children;
+
+		herit_node(AbstractSymbol name,AbstractSymbol parent_name) {
+			class_name=name;
+			this.parent_name=parent_name;
+		}
+	}
 	
 
 
@@ -178,11 +194,44 @@ class ClassTable {
 	
 	/* fill this in */
 		System.out.println("Hey, it's me!");
+		
+		// get the list of classes
 		Enumeration cls_e = cls.getElements();
+
+		// make a dictionnary of inheritance tree nodes to be able to get node by name
+		HashMap<AbstractSymbol,herit_node> herit_node_by_name = new HashMap<AbstractSymbol,herit_node>();
+
+
 		while( cls_e.hasMoreElements() ) {
 			class_c c = (class_c) cls_e.nextElement();
 			System.out.println("Class "+c.name+" parent is "+c.parent);
+			herit_node hn = new herit_node(c.name, c.parent);
+
+			if( herit_node_by_name.containsKey(c.name) ) {
+				System.out.println("Class "+c.name+" defined twice.");
+				semantError(c);
+			}
+			else
+			{
+				herit_node_by_name.put(c.name,hn);
+			}
+
 		}
+
+		// Fill in parent node of each herit_node
+		// and checks that parent exists
+		for( herit_node hn : herit_node_by_name.values() ) {
+			if( herit_node_by_name.containsKey(hn.parent_name)) {
+				hn.parent=herit_node_by_name.get(hn.parent_name);
+			}
+			else
+			{
+				System.out.println("Class "+hn.class_name+" parent does not exist.");
+				semantError();
+			}
+		}
+
+
 
     }
 
