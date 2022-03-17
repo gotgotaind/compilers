@@ -255,16 +255,24 @@ class ClassTable {
 
 		// check for cycles
 		// We'll use this dictionary to track already visited nodes
-		HashMap<Boolean,AbstractSymbol> visited_by_name = new HashMap();
+		HashMap<AbstractSymbol,Boolean> visited_by_name = new HashMap();
 		for( AbstractSymbol cn : herit_node_by_name.keySet() ) {
 			// initialize the dictionary of visited nodes to false
-			for( AbstractSymbol _cn : herit_node_by_name.keySet() ) { visited_by_name.put(Boolean.FALSE,_cn); }
-			visited_by_name.put(Boolean.TRUE,cn);
+			for( AbstractSymbol _cn : herit_node_by_name.keySet() ) { visited_by_name.put(_cn,Boolean.FALSE); }
+			visited_by_name.put(cn,Boolean.TRUE);
 
 			AbstractSymbol _cn=cn;
-			while ( herit_node_by_name.get(_cn).class_name != TreeConstants.Object_ ) {
+			Boolean cycle_detected=Boolean.FALSE;
+
+			while ( (herit_node_by_name.get(_cn).class_name != TreeConstants.Object_ ) & ( cycle_detected == Boolean.FALSE ) ) {
 				AbstractSymbol pn=herit_node_by_name.get(_cn).parent_name;
 				if( visited_by_name.get(pn) == Boolean.TRUE ) {
+					System.out.println("Class "+pn+", parent of "+_cn+", has already been visited during cycle check!");
+					cycle_detected=Boolean.TRUE;
+					semantError();
+				}
+				else
+				{
 					_cn=herit_node_by_name.get(_cn).parent_name;
 				}
 			}
