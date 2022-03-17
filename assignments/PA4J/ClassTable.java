@@ -242,12 +242,34 @@ class ClassTable {
 			}
 			else
 			{
-				if( hn.parent_name == herit_node_by_name.get("_no_class").class_name ) {
+				if( hn.class_name == TreeConstants.Object_ ) {
 					System.out.println("Ok, "+hn.class_name+" is Object.");
 				}
-				System.out.println("Class "+hn.class_name+" parent does not exist.");
-				semantError();
+				else
+				{
+					System.out.println("Class "+hn.class_name+" parent does not exist.");
+					semantError();
+				}
 			}
+		}
+
+		// check for cycles
+		// We'll use this dictionary to track already visited nodes
+		HashMap<Boolean,AbstractSymbol> visited_by_name = new HashMap();
+		for( AbstractSymbol cn : herit_node_by_name.keySet() ) {
+			// initialize the dictionary of visited nodes to false
+			for( AbstractSymbol _cn : herit_node_by_name.keySet() ) { visited_by_name.put(Boolean.FALSE,_cn); }
+			visited_by_name.put(Boolean.TRUE,cn);
+
+			AbstractSymbol _cn=cn;
+			while ( herit_node_by_name.get(_cn).class_name != TreeConstants.Object_ ) {
+				AbstractSymbol pn=herit_node_by_name.get(_cn).parent_name;
+				if( visited_by_name.get(pn) == Boolean.TRUE ) {
+					_cn=herit_node_by_name.get(_cn).parent_name;
+				}
+			}
+
+			
 		}
 
 
