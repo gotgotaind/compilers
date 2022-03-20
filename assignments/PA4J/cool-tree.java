@@ -28,6 +28,7 @@ abstract class Class_ extends TreeNode {
         super(lineNumber);
     }
     public abstract void dump_with_types(PrintStream out, int n);
+    public abstract void semant_pass1(SymbolTable st, ClassTable ct);
 
 }
 
@@ -65,6 +66,8 @@ abstract class Feature extends TreeNode {
         super(lineNumber);
     }
     public abstract void dump_with_types(PrintStream out, int n);
+    public abstract void semant_pass1(SymbolTable st, ClassTable ct);
+    
 
 }
 
@@ -268,12 +271,11 @@ class programc extends Program {
     SymbolTable st = new SymbolTable();
 	
 	/* some semantic analysis code may go here */
-        for (Enumeration e = classes.getElements(); e.hasMoreElements(); ) {
-	    ((Class_)e.nextElement()).semant_pass1(ct,st);
-        }
+    for (Enumeration e = classes.getElements(); e.hasMoreElements(); ) {
+	    ((Class_)e.nextElement()).semant_pass1(st,ct);
     }
 
-	if (classTable.errors()) {
+	if (ct.errors()) {
 	    System.err.println("Compilation halted due to static semantic errors.");
 	    System.exit(1);
 	}
@@ -391,6 +393,13 @@ class method extends Feature {
 	expr.dump_with_types(out, n + 2);
     }
 
+    public void semant_pass1(SymbolTable st, ClassTable ct) {
+        //for (Enumeration e = formals.getElements(); e.hasMoreElements();) {
+            //((Formal)e.nextElement()).semant_pass1(st,ct);
+            //}
+        // expr.semant_pass1(st,ct);
+    }
+
 }
 
 
@@ -431,6 +440,18 @@ class attr extends Feature {
         dump_AbstractSymbol(out, n + 2, name);
         dump_AbstractSymbol(out, n + 2, type_decl);
 	init.dump_with_types(out, n + 2);
+    }
+
+    public void semant_pass1(SymbolTable st, ClassTable ct) {
+        if( ct.isValidClassName(type_decl)) {
+            st.addId(name, type_decl);
+            if (Flags.semant_debug) System.out.println("What?");
+        }
+        else
+        {
+            System.out.println("Semantic error, type "+type_decl+" is not a class or basic class name");
+            st.addId(name, TreeConstants.Object_);
+        }
     }
 
 }

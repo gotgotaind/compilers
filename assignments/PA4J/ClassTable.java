@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Set;
 
 /** This class may be used to contain the semantic information such as
  * the inheritance graph.  You may use it or not as you like: it is only
@@ -11,6 +12,7 @@ class ClassTable {
     private int semantErrors;
     private PrintStream errorStream;
 	private Classes cls_with_basics;
+	private Set<AbstractSymbol> classes_names_set;
 
     /** Creates data structures representing basic Cool classes (Object,
      * IO, Int, Bool, String).  Please note: as is this method does not
@@ -220,7 +222,7 @@ class ClassTable {
 		Enumeration cls_with_basics_e = cls_with_basics.getElements();
 		while( cls_with_basics_e.hasMoreElements() ) {
 			class_c c = (class_c) cls_with_basics_e.nextElement();
-			System.out.println("Class "+c.name+" parent is "+c.parent);
+			if (Flags.semant_debug) System.out.println("Class "+c.name+" parent is "+c.parent);
 			herit_node hn = new herit_node(c.name, c.parent);
 
 			if( herit_node_by_name.containsKey(c.name) ) {
@@ -233,6 +235,9 @@ class ClassTable {
 			}
 
 		}
+
+		// makes a set of all the classes names
+		classes_names_set = herit_node_by_name.keySet();
 
 		// Fill in parent node of each herit_node
 		// and checks that parent exists
@@ -283,6 +288,16 @@ class ClassTable {
 
 
     }
+
+	public Boolean isValidClassName(AbstractSymbol cn) {
+		if( classes_names_set.contains(cn) ) {
+			return Boolean.TRUE;
+		}
+		else
+		{
+			return Boolean.FALSE;
+		}
+	}
 
     /** Prints line number and file name of the given class.
      *
