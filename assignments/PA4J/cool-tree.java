@@ -105,6 +105,7 @@ abstract class Formal extends TreeNode {
         super(lineNumber);
     }
     public abstract void dump_with_types(PrintStream out, int n);
+    public abstract void semant_pass1(SymbolTable st, ClassTable ct);
 
 }
 
@@ -151,6 +152,8 @@ abstract class Expression extends TreeNode {
         else
             { out.println(Utilities.pad(n) + ": _no_type"); }
     }
+    public abstract AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct);
+    
 
 }
 
@@ -188,6 +191,7 @@ abstract class Case extends TreeNode {
         super(lineNumber);
     }
     public abstract void dump_with_types(PrintStream out, int n);
+    public abstract void semant_pass1(SymbolTable st, ClassTable ct);
 
 }
 
@@ -341,7 +345,8 @@ class class_c extends Class_ {
         st.enterScope();
         for (Enumeration e = features.getElements(); e.hasMoreElements();) {
             ((Feature)e.nextElement()).semant_pass1(st,ct);
-            }       
+            }     
+        st.exitScope();  
     }
 
 }
@@ -394,10 +399,12 @@ class method extends Feature {
     }
 
     public void semant_pass1(SymbolTable st, ClassTable ct) {
-        //for (Enumeration e = formals.getElements(); e.hasMoreElements();) {
-            //((Formal)e.nextElement()).semant_pass1(st,ct);
-            //}
-        // expr.semant_pass1(st,ct);
+        st.enterScope();
+        for (Enumeration e = formals.getElements(); e.hasMoreElements();) {
+            ((Formal)e.nextElement()).semant_pass1(st,ct);
+            }
+        expr.semant_pass1(st,ct);
+        st.exitScope();
     }
 
 }
@@ -491,6 +498,18 @@ class formalc extends Formal {
         dump_AbstractSymbol(out, n + 2, type_decl);
     }
 
+    public void semant_pass1(SymbolTable st, ClassTable ct) {
+        if( ct.isValidClassName(type_decl)) {
+            st.addId(name, type_decl);
+            //if (Flags.semant_debug) System.out.println("What?");
+        }
+        else
+        {
+            System.out.println("Semantic error, type "+type_decl+" is not a class or basic class name");
+            st.addId(name, TreeConstants.Object_);
+        }
+    }
+
 }
 
 
@@ -533,6 +552,7 @@ class branch extends Case {
 	expr.dump_with_types(out, n + 2);
     }
 
+    public void semant_pass1(SymbolTable st, ClassTable ct) {}
 }
 
 
@@ -570,6 +590,8 @@ class assign extends Expression {
 	expr.dump_with_types(out, n + 2);
 	dump_type(out, n);
     }
+
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) { return TreeConstants.No_type; }
 
 }
 
@@ -621,6 +643,10 @@ class static_dispatch extends Expression {
         }
         out.println(Utilities.pad(n + 2) + ")");
 	dump_type(out, n);
+    }
+
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return ct.get_method_return_type(type_name, name);
     }
 
 }

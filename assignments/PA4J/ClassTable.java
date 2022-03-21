@@ -299,6 +299,24 @@ class ClassTable {
 		}
 	}
 
+	AbstractSymbol get_method_return_type(AbstractSymbol class_name, AbstractSymbol method_name) {
+		Enumeration cls_with_basics_e=cls_with_basics.getElements();
+		while( cls_with_basics_e.hasMoreElements() ) {
+			class_c c = (class_c) cls_with_basics_e.nextElement();
+			for (Enumeration e = c.features.getElements(); e.hasMoreElements();) {
+				Feature f = ((Feature)e.nextElement());
+				if( f.getClass() == method.class ) {
+					method m = (method)f;
+					if( m.name == method_name ) {
+						return m.return_type;
+					}
+				}
+			}
+		}
+		System.out.println("No method named "+method_name+" found in class "+class_name+ " in get_method_return_type");
+		return TreeConstants.Object_;
+	}
+
     /** Prints line number and file name of the given class.
      *
      * Also increments semantic error count.
