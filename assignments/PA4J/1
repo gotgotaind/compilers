@@ -42,21 +42,21 @@ _program
           #6
           _object
             x
-          : _no_type
-        : _no_type
+          : Int
+        : Int
         #7
         _assign
           b
           #7
           _object
             y
-          : _no_type
-        : _no_type
+          : Bool
+        : Bool
         #8
         _object
           self
-        : _no_type
-      : _no_type
+        : SELF_TYPE
+      : SELF_TYPE
     )
   #13
   _class

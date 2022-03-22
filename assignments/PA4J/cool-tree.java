@@ -591,7 +591,22 @@ class assign extends Expression {
 	dump_type(out, n);
     }
 
-    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) { return TreeConstants.No_type; }
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        AbstractSymbol name_type=TreeConstants.Object_;
+        if( st.lookup(name) == null ) {
+            System.out.println("name "+name+" is not in scope of assign");
+        } 
+        else
+        {
+            name_type=(AbstractSymbol)st.lookup(name);
+        }
+        AbstractSymbol expr_type=expr.semant_pass1(st, ct);
+        if( expr_type != name_type ) {
+            System.out.println("type mismatch in assign "+name+" = "+expr.toString());
+        }
+        set_type(name_type);
+        return name_type;
+     }
 
 }
 
@@ -696,6 +711,10 @@ class dispatch extends Expression {
 	dump_type(out, n);
     }
 
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
+
 }
 
 
@@ -738,7 +757,9 @@ class cond extends Expression {
 	else_exp.dump_with_types(out, n + 2);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -776,7 +797,9 @@ class loop extends Expression {
 	body.dump_with_types(out, n + 2);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -816,7 +839,9 @@ class typcase extends Expression {
         }
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -851,7 +876,14 @@ class block extends Expression {
         }
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        AbstractSymbol block_type=TreeConstants.No_type;
+        for (Enumeration e = body.getElements(); e.hasMoreElements();) {
+            block_type=((Expression)e.nextElement()).semant_pass1(st,ct);
+            }
+        set_type(block_type);
+        return block_type;
+    }
 }
 
 
@@ -899,7 +931,9 @@ class let extends Expression {
 	body.dump_with_types(out, n + 2);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -937,7 +971,9 @@ class plus extends Expression {
 	e2.dump_with_types(out, n + 2);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -975,7 +1011,9 @@ class sub extends Expression {
 	e2.dump_with_types(out, n + 2);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -1013,7 +1051,9 @@ class mul extends Expression {
 	e2.dump_with_types(out, n + 2);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -1051,7 +1091,9 @@ class divide extends Expression {
 	e2.dump_with_types(out, n + 2);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -1084,7 +1126,9 @@ class neg extends Expression {
 	e1.dump_with_types(out, n + 2);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -1122,7 +1166,9 @@ class lt extends Expression {
 	e2.dump_with_types(out, n + 2);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -1160,7 +1206,9 @@ class eq extends Expression {
 	e2.dump_with_types(out, n + 2);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -1198,7 +1246,9 @@ class leq extends Expression {
 	e2.dump_with_types(out, n + 2);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -1231,7 +1281,9 @@ class comp extends Expression {
 	e1.dump_with_types(out, n + 2);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -1264,7 +1316,9 @@ class int_const extends Expression {
 	dump_AbstractSymbol(out, n + 2, token);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -1297,7 +1351,9 @@ class bool_const extends Expression {
 	dump_Boolean(out, n + 2, val);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -1332,7 +1388,9 @@ class string_const extends Expression {
 	out.println("\"");
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -1365,7 +1423,9 @@ class new_ extends Expression {
 	dump_AbstractSymbol(out, n + 2, type_name);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -1398,7 +1458,9 @@ class isvoid extends Expression {
 	e1.dump_with_types(out, n + 2);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -1426,7 +1488,9 @@ class no_expr extends Expression {
         out.println(Utilities.pad(n) + "_no_expr");
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        return TreeConstants.No_type;
+    }
 }
 
 
@@ -1459,7 +1523,18 @@ class object extends Expression {
 	dump_AbstractSymbol(out, n + 2, name);
 	dump_type(out, n);
     }
-
+    public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
+        AbstractSymbol object_type=TreeConstants.No_type;
+        if( name == TreeConstants.self ) {
+            object_type=TreeConstants.SELF_TYPE;
+        }
+        else
+        {
+            object_type=(AbstractSymbol)st.lookup(name);
+        }
+        set_type(object_type);
+        return object_type;
+    }
 }
 
 
