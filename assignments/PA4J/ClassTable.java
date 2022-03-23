@@ -222,11 +222,11 @@ class ClassTable {
 		Enumeration cls_with_basics_e = cls_with_basics.getElements();
 		while( cls_with_basics_e.hasMoreElements() ) {
 			class_c c = (class_c) cls_with_basics_e.nextElement();
-			if (Flags.semant_debug) System.out.println("Class "+c.name+" parent is "+c.parent);
+			if (Flags.semant_debug) System.err.println("Class "+c.name+" parent is "+c.parent);
 			herit_node hn = new herit_node(c.name, c.parent);
 
 			if( herit_node_by_name.containsKey(c.name) ) {
-				System.out.println("Class "+c.name+" defined twice.");
+				System.err.println("Class "+c.name+" defined twice.");
 				semantError(c);
 			}
 			else
@@ -252,7 +252,7 @@ class ClassTable {
 				}
 				else
 				{
-					System.out.println("Class "+hn.class_name+" parent does not exist.");
+					System.err.println("Class "+hn.class_name+" parent does not exist.");
 					semantError();
 				}
 			}
@@ -272,7 +272,7 @@ class ClassTable {
 			while ( (herit_node_by_name.get(_cn).class_name != TreeConstants.Object_ ) & ( cycle_detected == Boolean.FALSE ) ) {
 				AbstractSymbol pn=herit_node_by_name.get(_cn).parent_name;
 				if( visited_by_name.get(pn) == Boolean.TRUE ) {
-					System.out.println("Class "+pn+", parent of "+_cn+", has already been visited during cycle check!");
+					System.err.println("Class "+pn+", parent of "+_cn+", has already been visited during cycle check!");
 					cycle_detected=Boolean.TRUE;
 					semantError();
 				}
@@ -313,7 +313,8 @@ class ClassTable {
 				}
 			}
 		}
-		System.out.println("No method named "+method_name+" found in class "+class_name+ " in get_method_return_type");
+		System.err.println("No method named "+method_name+" found in class "+class_name+ " in get_method_return_type");
+		semantError();
 		return TreeConstants.Object_;
 	}
 

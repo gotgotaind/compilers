@@ -451,7 +451,7 @@ class attr extends Feature {
 
     public void semant_pass1(SymbolTable st, ClassTable ct) {
         
-        if (Flags.semant_debug)  System.out.println("semanting "+name+" : "+type_decl+" <- "+init);
+        if (Flags.semant_debug)  System.err.println("semanting "+name+" : "+type_decl+" <- "+init);
 
         AbstractSymbol attr_type=TreeConstants.Object_;
         if( ct.isValidClassName(type_decl)) {
@@ -460,7 +460,8 @@ class attr extends Feature {
         }
         else
         {
-            System.out.println("Semantic error, type "+type_decl+" is not a class or basic class name");
+            System.err.println("Semantic error, type "+type_decl+" is not a class or basic class name");
+            ct.semantError();
             st.addId(name, TreeConstants.Object_);
         }
 
@@ -468,7 +469,8 @@ class attr extends Feature {
         AbstractSymbol init_type=init.semant_pass1(st, ct);
         if( init.get_type() != TreeConstants.No_type ) {
                     if( init_type != attr_type ) {
-                System.out.println("Type mismatch in attr. Type declared is "+type_decl+" while expr is "+init_type);
+                System.err.println("Type mismatch in attr. Type declared is "+type_decl+" while expr is "+init_type);
+                ct.semantError();
             }
         }
 
@@ -517,7 +519,8 @@ class formalc extends Formal {
         }
         else
         {
-            System.out.println("Semantic error, type "+type_decl+" is not a class or basic class name");
+            System.err.println("Semantic error, type "+type_decl+" is not a class or basic class name");
+            ct.semantError();
             st.addId(name, TreeConstants.Object_);
         }
     }
@@ -605,9 +608,10 @@ class assign extends Expression {
 
     public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
         AbstractSymbol name_type=TreeConstants.Object_;
-        if (Flags.semant_debug)  System.out.println("semanting "+name+" <- "+expr);
+        if (Flags.semant_debug)  System.err.println("semanting "+name+" <- "+expr);
         if( st.lookup(name) == null ) {
-            System.out.println("name "+name+" is not in scope of assign");
+            System.err.println("name "+name+" is not in scope of assign");
+            ct.semantError();
         } 
         else
         {
@@ -615,7 +619,8 @@ class assign extends Expression {
         }
         AbstractSymbol expr_type=expr.semant_pass1(st, ct);
         if( expr_type != name_type ) {
-            System.out.println("type mismatch in assign "+name+" = "+expr.toString());
+            System.err.println("type mismatch in assign "+name+" = "+expr.toString());
+            ct.semantError();
         }
         set_type(name_type);
         return name_type;
@@ -1459,7 +1464,8 @@ class new_ extends Expression {
         } 
         else
         {
-            System.out.println("Unknown type '"+type_name+"'in new");
+            System.err.println("Unknown type '"+type_name+"'in new");
+            ct.semantError();
         }
         set_type(expr_type);
         return expr_type;
