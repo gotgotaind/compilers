@@ -450,17 +450,29 @@ class attr extends Feature {
     }
 
     public void semant_pass1(SymbolTable st, ClassTable ct) {
+        
+        if (Flags.semant_debug)  System.out.println("semanting "+name+" : "+type_decl+" <- "+init);
+
+        AbstractSymbol attr_type=TreeConstants.Object_;
         if( ct.isValidClassName(type_decl)) {
             st.addId(name, type_decl);
-            if (Flags.semant_debug) System.out.println("What?");
+            attr_type=type_decl;
         }
         else
         {
             System.out.println("Semantic error, type "+type_decl+" is not a class or basic class name");
             st.addId(name, TreeConstants.Object_);
         }
-    }
 
+        
+        AbstractSymbol init_type=init.semant_pass1(st, ct);
+        if( init.get_type() != TreeConstants.No_type ) {
+                    if( init_type != attr_type ) {
+                System.out.println("Type mismatch in attr. Type declared is "+type_decl+" while expr is "+init_type);
+            }
+        }
+
+    }
 }
 
 
@@ -593,6 +605,7 @@ class assign extends Expression {
 
     public AbstractSymbol semant_pass1(SymbolTable st, ClassTable ct) {
         AbstractSymbol name_type=TreeConstants.Object_;
+        if (Flags.semant_debug)  System.out.println("semanting "+name+" <- "+expr);
         if( st.lookup(name) == null ) {
             System.out.println("name "+name+" is not in scope of assign");
         } 
