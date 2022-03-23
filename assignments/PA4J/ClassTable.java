@@ -202,7 +202,7 @@ class ClassTable {
 	errorStream = System.err;
 	
 	/* fill this in */
-		System.out.println("Hey, it's me!");
+		// System.out.println("Hey, it's me!");
 
 		// initialize a Classes that will include basic classes
 		cls_with_basics=new Classes(0);
@@ -248,7 +248,7 @@ class ClassTable {
 			else
 			{
 				if( hn.class_name == TreeConstants.Object_ ) {
-					System.out.println("Ok, "+hn.class_name+" is Object.");
+					// System.out.println("Ok, "+hn.class_name+" is Object.");
 				}
 				else
 				{
